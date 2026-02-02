@@ -1,6 +1,4 @@
 export class Timer {
-  private timer: number = 0;
-
   private horas: number = 0;
   private minutos: number = 0;
   private segundos: number = 0;
@@ -15,55 +13,56 @@ export class Timer {
     public longBreak: number = 15,
     public cycle: number = 4,
   ) {
-    this.minutos = this.focus / 60;
+    this.timerFormat(this.focus);
+  }
 
-    if (this.minutos > 60) {
+  timerFormat(value: number) {
+    this.segundos = value;
+
+    if (this.segundos >= 60) {
+      this.minutos = Math.floor(this.segundos / 60);
+      this.segundos = 0;
+    }
+
+    if (this.minutos >= 60) {
       this.horas = Math.floor(this.minutos / 60);
-      this.minutos = 0;
+      this.minutos = this.minutos % 60;
     }
 
     this.onTick(this.horas, this.minutos, this.segundos);
   }
 
   shortBreakTime() {
-    this.minutos = this.shortBreak;
-    this.intervalID = setInterval(() => {
-      if (this.segundos <= 0) {
-        this.segundos = 60;
-        this.minutos--;
-      }
-
-      this.segundos--;
-
-      if (this.minutos <= 0 && this.segundos <= 0) {
-        this.stopTimer();
-        this.startTime();
-      }
-      this.onTick(this.minutos, this.segundos);
-    }, 100);
+    this.timerFormat(this.shortBreak);
+    this.intervalBreakTime();
   }
 
   longBreakTime() {
-    this.minutos = this.longBreak;
+    this.timerFormat(this.longBreak);
+    this.intervalBreakTime();
+  }
+
+  intervalBreakTime() {
     this.intervalID = setInterval(() => {
-      if (this.segundos <= 0) {
+      if (this.segundos == 0) {
         this.segundos = 60;
         this.minutos--;
       }
 
       this.segundos--;
 
-      if (this.minutos <= 0 && this.segundos <= 0) {
+      if (this.minutos == 0 && this.segundos == 0) {
         this.stopTimer();
+        this.segundos = this.focus;
         this.startTime();
-        console.log("LongBreak Acabou");
       }
-      this.onTick(this.minutos, this.segundos);
-    }, 100);
+      this.onTick(this.horas, this.minutos, this.segundos);
+    }, 1000);
   }
 
   startTime() {
     if (this.intervalID) return;
+    this.timerFormat(this.segundos);
 
     this.intervalID = setInterval(() => {
       if (this.segundos <= 0) {
@@ -78,12 +77,24 @@ export class Timer {
 
       this.segundos--;
 
-      if (this.minutos <= 0 && this.segundos <= 0) {
+      if (this.minutos <= 0 && this.segundos <= 0 && this.ciclos < this.cycle) {
+        this.ciclos++;
         this.stopTimer();
+        this.shortBreakTime();
+      }
+
+      if (
+        this.minutos <= 0 &&
+        this.segundos <= 0 &&
+        this.ciclos === this.cycle
+      ) {
+        this.ciclos = 0;
+        this.stopTimer();
+        this.longBreakTime();
       }
 
       this.onTick(this.horas, this.minutos, this.segundos);
-    }, 1);
+    }, 1000);
   }
 
   stopTimer() {
@@ -92,14 +103,9 @@ export class Timer {
   }
 
   resetTimer() {
+    this.ciclos = 0;
     this.stopTimer();
-    this.minutos = this.focus / 60;
-    this.segundos = 0;
-
-    if (this.minutos > 60) {
-      this.horas = Math.floor(this.minutos / 60);
-      this.minutos = 0;
-    }
+    this.timerFormat(this.focus);
     this.onTick(this.horas, this.minutos, this.segundos);
   }
 }
