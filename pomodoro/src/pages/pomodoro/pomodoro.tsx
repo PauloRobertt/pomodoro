@@ -1,38 +1,84 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { TimerProps } from "../../types/timer";
+import { Timer } from "../../class/Timer";
+
+import Button from "../../components/button/button.tsx";
+
 import styles from "./pomodoro.module.css";
 
-export default function pomodoro() {
-  let interval: any;
+export default function Pomodoro({
+  focus,
+  shortBreak,
+  longBreak,
+  cycle,
+}: TimerProps) {
+  const [horas, setHoras] = useState(0);
   const [minutos, setMinutos] = useState(0);
-  const [segundos, setSegundos] = useState(55);
+  const [segundos, setSegundos] = useState(0);
 
-  const [timer, setTimer] = useState(
-    `${minutos.toString().padStart(2, "0")}:${segundos.toString().padStart(2, "0")}`,
-  );
-
-  const startTime = () => {
-    console.log("Start");
-    interval = setInterval(() => {
-      setSegundos((prev) => (prev += 1));
-    }, 1000);
-  };
+  const timerRef = useRef<Timer | null>(null);
 
   useEffect(() => {
-    setTimer(
-      `${minutos.toString().padStart(2, "0")}:${segundos.toString().padStart(2, "0")}`,
+    timerRef.current = new Timer(
+      (hours, min, sec) => {
+        setHoras(hours);
+        setMinutos(min);
+        setSegundos(sec);
+      },
+      focus,
+      shortBreak,
+      longBreak,
+      cycle,
     );
-
-    if (segundos > 59) {
-      setSegundos(55);
-      setMinutos((prev) => (prev += 1));
-    }
-  }, [startTime]);
+  }, []);
 
   return (
-    <div>
-      <div>{timer}</div>
-      <button onClick={startTime}>Start</button>
-      <button>Stop</button>
+    <div className={styles.containerBackground}>
+      <div className={styles.containerPomodoro}>
+        <div className={styles.circleWrapper}>
+          <svg width="200" height="200" className={styles.circleContent}>
+            <circle
+              className={styles.circle}
+              r="90"
+              cx="100"
+              cy="100"
+              fill="white"
+              stroke="var(--secundaryColor)"
+              strokeWidth="5px"
+              strokeDasharray="565.49"
+            />
+
+            <circle
+              className={styles.circle}
+              r="90"
+              cx="100"
+              cy="100"
+              fill="white"
+              stroke="var(--primaryColor)"
+              strokeWidth="5px"
+              strokeDasharray="565.49"
+            />
+          </svg>
+          <h1>
+            {horas > 0 ? <>{String(horas).padStart(2, "0")}:</> : <></>}
+            {String(minutos).padStart(2, "0")}:
+            {String(segundos).padStart(2, "0")}
+          </h1>
+        </div>
+
+        <div className={styles.containerButtons}>
+          <Button
+            action={() => {
+              timerRef.current?.startTime();
+            }}
+            text="Start"
+          />
+
+          <Button action={() => timerRef.current?.stopTimer()} text="Stop" />
+
+          <Button action={() => timerRef.current?.resetTimer()} text="Reset" />
+        </div>
+      </div>
     </div>
   );
 }
