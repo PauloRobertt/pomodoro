@@ -6,15 +6,18 @@
   justify-content: center;
   align-items: center;
 }
+
 .containerPomodoro {
+  position: relative;
   width: 70%;
-  height: 70%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 20px;
   border-radius: 20px;
+  border: 2px solid var(--primaryColor);
   background-color: var(--containerBackgroundColor);
 }
 
@@ -22,13 +25,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30%;
+  width: 50%;
   position: relative;
   padding: 0.5em;
 }
 
 .circleContent {
   transform: rotate(-90deg);
+  width: 300px;
+  height: 300px;
 }
 
 .circleBackground {
@@ -40,15 +45,12 @@
 .circleWrapper h1 {
   font-weight: bold;
   color: var(--primaryColor);
-  font-size: 48px;
+  font-size: 5em;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .containerButtons {
@@ -58,4 +60,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.containerTimer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ciclosImg {
+  margin: 5px;
+  width: 17px;
+  height: 17px;
 }
