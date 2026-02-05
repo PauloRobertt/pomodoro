@@ -1,0 +1,19 @@
+.buttonDefault {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background-color: var(--primaryColor);
+  color: var(--containerBackgroundColor);
+  border-radius: 10px;
+}
+
+.mainButton {
+  font-size: 20px;
+  width: 180px;
+  height: 50px;
+}
+
+.menuButton {
+  width: 80px;
+  height: 40px;
+}

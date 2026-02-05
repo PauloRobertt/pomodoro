@@ -1,0 +1,123 @@
+.layoutMenu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+}
+
+.imgConfig {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  margin: 0.5em;
+}
+
+.imgConfig img {
+  width: 100%;
+  height: 100%;
+}
+
+.containerConfig {
+  overflow: hidden;
+  width: 200px;
+  height: 0;
+  position: absolute;
+  top: 60px;
+  right: 5px;
+  z-index: 1;
+  width: 200px;
+  height: 0px;
+  border-radius: 10px;
+  border: 0px solid var(--primaryColor);
+  transition:
+    height 0.5s ease-in,
+    border 0.5s ease-in;
+}
+
+.containerConfigOpen {
+  overflow: hidden;
+  width: 200px;
+  height: 0;
+  position: absolute;
+  top: 60px;
+  right: 5px;
+  z-index: 1;
+  width: 200px;
+  height: 250px;
+  border-radius: 10px;
+  border: 1px solid var(--primaryColor);
+  transition: height 0.5s ease-in;
+}
+
+.containerConfig::before {
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid var(--primaryColor);
+}
+
+.contentConfig {
+  width: 100%;
+  height: 100%;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2em;
+  border-radius: 10px;
+}
+
+.opConfig {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5em;
+  width: 100%;
+}
+
+.op {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  background-color: var(--primaryColor);
+  color: #ffff;
+  padding: 0.5em;
+  width: 100%;
+  height: 40px;
+}
+
+.opConfig .time {
+  gap: 0.3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.opConfig .time input {
+  text-align: center;
+  width: 35px;
+  border: none;
+  border-bottom: 2px solid #ffff;
+  background-color: var(--primaryColor);
+  color: #fff;
+}
+
+.buttonsConfig {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  width: 100%;
+  height: 60px;
+}
