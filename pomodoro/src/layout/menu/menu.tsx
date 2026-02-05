@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./menu.module.css";
+import stylesButton from "../../components/button/button.module.css";
 import type { MenuProps } from "../../types/menu";
 import { OrganizarImgs } from "../../assets/OrganizarImgs";
 import Button from "../../components/button/button";
@@ -73,9 +74,14 @@ export default function Menu({
               action={() => {
                 setIsShowMenu((prev) => !prev);
               }}
+              styleButton={stylesButton.menuButton}
               text="Cancel"
             />
-            <Button action={functionSaveConfig} text="Save" />
+            <Button
+              action={functionSaveConfig}
+              styleButton={stylesButton.menuButton}
+              text="Save"
+            />
           </div>
         </div>
       </div>
