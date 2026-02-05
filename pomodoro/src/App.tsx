@@ -8,9 +8,9 @@ function App() {
     <>
       <Pomodoro
         //Valores tem que ser em segundos
-        focus={30}
-        shortBreak={40}
-        longBreak={60}
+        focus={1800}
+        shortBreak={300}
+        longBreak={900}
         cycle={4}
       />
     </>
