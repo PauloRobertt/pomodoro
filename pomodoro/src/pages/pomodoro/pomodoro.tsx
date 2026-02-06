@@ -21,6 +21,7 @@ export default function Pomodoro({
   const [timeLong, setTimeLong] = useState(longBreak);
   const [timeCycle, setTimeCycle] = useState(cycle);
 
+  const [ciclosConcluidos, setCiclosConcluidos] = useState(0);
   const [statusTimer, setStatusTimer] = useState("");
   const [isUseTimer, setIsUseTimer] = useState(false);
   const [horas, setHoras] = useState(0);
@@ -31,7 +32,8 @@ export default function Pomodoro({
 
   useEffect(() => {
     timerRef.current = new Timer(
-      (status, hours, min, sec) => {
+      (ciclosConcluidos, status, hours, min, sec) => {
+        setCiclosConcluidos(ciclosConcluidos);
         setStatusTimer(status);
         setHoras(hours);
         setMinutos(min);
@@ -44,7 +46,7 @@ export default function Pomodoro({
     );
   }, [timeFocus]);
 
-  function saveConfig(e: any) {
+  function saveConfig(e: any): void {
     e.preventDefault();
     const inputFocusValue = document.getElementById(
       "inputFocus",
@@ -71,27 +73,27 @@ export default function Pomodoro({
         functionSaveConfig={saveConfig}
       />
       <div className={styles.circleWrapper}>
-        <svg width="150" height="150" className={styles.circleContent}>
+        <svg width="200" height="200" className={styles.circleContent}>
           <circle
             className={styles.circle}
-            r="130"
-            cx="150"
-            cy="150"
+            r="170"
+            cx="200"
+            cy="200"
             fill="white"
             stroke="var(--secundaryColor)"
             strokeWidth="5px"
-            strokeDasharray="816,4"
+            strokeDasharray="1067,6"
           />
 
           <circle
             className={styles.circle}
-            r="130"
-            cx="150"
-            cy="150"
+            r="170"
+            cx="200"
+            cy="200"
             fill="white"
             stroke="var(--primaryColor)"
             strokeWidth="5px"
-            strokeDasharray="816,4"
+            strokeDasharray="1067,6"
           />
         </svg>
         <div className={styles.containerTimer}>
@@ -101,14 +103,26 @@ export default function Pomodoro({
             {String(segundos).padStart(2, "0")}
           </h1>
           <small>{statusTimer}</small>
-          <small>
-            {Array.from({ length: cycle }, (_, index) => (
+          <small className={styles.containerCiclos}>
+            {Array.from({ length: ciclosConcluidos }, (_, index) => (
               <img
+                key={index}
                 className={styles.ciclosImg}
-                src={OrganizarImgs.pomodoroEmpty}
-                alt=""
+                src={OrganizarImgs.pomodoroDefault}
+                alt="Imagem padrão do pomodoro"
               />
             ))}
+            {Array.from(
+              { length: timeCycle - ciclosConcluidos },
+              (_, index) => (
+                <img
+                  key={index}
+                  className={styles.ciclosImg}
+                  src={OrganizarImgs.pomodoroEmpty}
+                  alt="Imagem do pomodoro vazio"
+                />
+              ),
+            )}
           </small>
         </div>
       </div>

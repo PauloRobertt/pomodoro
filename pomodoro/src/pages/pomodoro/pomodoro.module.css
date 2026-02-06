@@ -22,8 +22,8 @@
 
 .circleContent {
   transform: rotate(-90deg);
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
 }
 
 .circleBackground {
@@ -53,6 +53,7 @@
 }
 
 .containerTimer {
+  max-width: 300px;
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -60,8 +61,16 @@
   align-items: center;
 }
 
+.containerCiclos {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
 .ciclosImg {
   margin: 5px;
-  width: 17px;
-  height: 17px;
+  width: 22px;
+  height: 22px;
 }
