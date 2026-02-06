@@ -9,6 +9,7 @@ export class Timer {
 
   constructor(
     private onTick: (
+      ciclosConcluidos: number,
       status: string,
       hors: number,
       min: number,
@@ -35,7 +36,7 @@ export class Timer {
       this.minutos = this.minutos % 60;
     }
 
-    this.onTick("Focus", this.horas, this.minutos, this.segundos);
+    this.onTick(this.ciclos, "Focus", this.horas, this.minutos, this.segundos);
   }
 
   shortBreakTime() {
@@ -64,8 +65,14 @@ export class Timer {
         this.segundos = this.focus;
         this.startTime();
       }
-      this.onTick(status, this.horas, this.minutos, this.segundos);
-    }, 100);
+      this.onTick(
+        this.ciclos,
+        "Focus",
+        this.horas,
+        this.minutos,
+        this.segundos,
+      );
+    }, 1000);
   }
 
   startTime() {
@@ -103,8 +110,14 @@ export class Timer {
 
       this.statusTimer = "Focus";
 
-      this.onTick(this.statusTimer, this.horas, this.minutos, this.segundos);
-    }, 100);
+      this.onTick(
+        this.ciclos,
+        "Focus",
+        this.horas,
+        this.minutos,
+        this.segundos,
+      );
+    }, 1000);
   }
 
   stopTimer() {
@@ -116,6 +129,6 @@ export class Timer {
     this.ciclos = 0;
     this.stopTimer();
     this.timerFormat(this.focus);
-    this.onTick("Focus", this.horas, this.minutos, this.segundos);
+    this.onTick(this.ciclos, "Focus", this.horas, this.minutos, this.segundos);
   }
 }
