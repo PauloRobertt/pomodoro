@@ -97,6 +97,7 @@ export class Timer {
 
   startTime() {
     if (this.intervalID) return;
+    this.tempoTotal = 0;
     this.timerFormat(this.segundos, this.tempoBreak);
 
     this.intervalID = setInterval(() => {
