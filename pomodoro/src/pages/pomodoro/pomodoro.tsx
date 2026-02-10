@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type HTMLElementType } from "react";
 import type { TimerProps } from "../../types/timer";
 import { Timer } from "../../class/Timer";
 
@@ -20,6 +20,8 @@ export default function Pomodoro({
   const [timeShort, setTimeShort] = useState(shortBreak);
   const [timeLong, setTimeLong] = useState(longBreak);
   const [timeCycle, setTimeCycle] = useState(cycle);
+  const [tempoTotal, setTempoTotal] = useState(0);
+  const [timeBreak, setTimeBreak] = useState(focus);
 
   const [ciclosConcluidos, setCiclosConcluidos] = useState(0);
   const [statusTimer, setStatusTimer] = useState("");
@@ -32,7 +34,9 @@ export default function Pomodoro({
 
   useEffect(() => {
     timerRef.current = new Timer(
-      (ciclosConcluidos, status, hours, min, sec) => {
+      (timerBreak, tempoTotal, ciclosConcluidos, status, hours, min, sec) => {
+        setTimeBreak(timerBreak);
+        setTempoTotal(tempoTotal);
         setCiclosConcluidos(ciclosConcluidos);
         setStatusTimer(status);
         setHoras(hours);
@@ -63,6 +67,20 @@ export default function Pomodoro({
     setTimeLong(Number(inputLongValue.value) * 60);
   }
 
+  useEffect(() => {
+    const circleElement = document.getElementById("circle") as HTMLElement;
+    const tempoRestante = timeBreak - tempoTotal;
+    const percent = (tempoRestante / timeBreak) * 100;
+    calcPerimeter(percent, circleElement);
+  }, [segundos]);
+
+  function calcPerimeter(percent: number, circleElement: any) {
+    const perimeter = 1069;
+    const percentual = (percent / 100) * perimeter;
+    const result = perimeter - percentual;
+    circleElement.style.setProperty("stroke-dashoffset", String(result));
+  }
+
   return (
     <div className={styles.containerPomodoro}>
       <Menu
@@ -82,18 +100,19 @@ export default function Pomodoro({
             fill="white"
             stroke="var(--secundaryColor)"
             strokeWidth="5px"
-            strokeDasharray="1067,6"
+            strokeDasharray={1069}
           />
 
           <circle
             className={styles.circle}
+            id="circle"
             r="170"
             cx="200"
             cy="200"
             fill="white"
             stroke="var(--primaryColor)"
             strokeWidth="5px"
-            strokeDasharray="1067,6"
+            strokeDasharray={1069}
           />
         </svg>
         <div className={styles.containerTimer}>
@@ -124,6 +143,7 @@ export default function Pomodoro({
               ),
             )}
           </small>
+          <small>Tempo Total: {tempoTotal}</small>
         </div>
       </div>
       <div className={styles.containerButtons}>

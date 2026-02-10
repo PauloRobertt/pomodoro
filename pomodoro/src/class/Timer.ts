@@ -1,4 +1,7 @@
 export class Timer {
+  private tempoTotal: number = 0;
+  private tempoBreak: number = 0;
+
   private statusTimer: string = "Focus";
   private horas: number = 0;
   private minutos: number = 0;
@@ -9,6 +12,8 @@ export class Timer {
 
   constructor(
     private onTick: (
+      tempoBreak: number,
+      tempoTotal: number,
       ciclosConcluidos: number,
       status: string,
       hors: number,
@@ -20,11 +25,12 @@ export class Timer {
     public longBreak: number,
     public cycle: number,
   ) {
-    this.timerFormat(this.focus);
+    this.timerFormat(this.focus, this.focus);
   }
 
-  timerFormat(value: number) {
+  timerFormat(value: number, tempoBreak: number) {
     this.segundos = value;
+    this.tempoBreak = tempoBreak;
 
     if (this.segundos >= 60) {
       this.minutos = Math.floor(this.segundos / 60);
@@ -36,36 +42,50 @@ export class Timer {
       this.minutos = this.minutos % 60;
     }
 
-    this.onTick(this.ciclos, "Focus", this.horas, this.minutos, this.segundos);
+    this.onTick(
+      this.tempoBreak,
+      this.tempoTotal,
+      this.ciclos,
+      "Focus",
+      this.horas,
+      this.minutos,
+      this.segundos,
+    );
   }
 
   shortBreakTime() {
     this.statusTimer = "ShortBreak";
-    this.timerFormat(this.shortBreak);
-    this.intervalBreakTime(this.statusTimer);
+    this.tempoTotal = 0;
+    this.timerFormat(this.shortBreak, this.shortBreak);
+    this.intervalBreakTime();
   }
 
   longBreakTime() {
-    this.timerFormat(this.longBreak);
+    this.timerFormat(this.longBreak, this.longBreak);
+    this.tempoTotal = 0;
     this.statusTimer = "LongBreak";
-    this.intervalBreakTime(this.statusTimer);
+    this.intervalBreakTime();
   }
 
-  intervalBreakTime(status: string) {
+  intervalBreakTime() {
     this.intervalID = setInterval(() => {
       if (this.segundos == 0) {
         this.segundos = 60;
         this.minutos--;
       }
 
+      this.tempoTotal++;
       this.segundos--;
 
       if (this.minutos == 0 && this.segundos == 0) {
         this.stopTimer();
         this.segundos = this.focus;
+        this.tempoBreak = this.focus;
         this.startTime();
       }
       this.onTick(
+        this.tempoBreak,
+        this.tempoTotal,
         this.ciclos,
         "Focus",
         this.horas,
@@ -77,7 +97,7 @@ export class Timer {
 
   startTime() {
     if (this.intervalID) return;
-    this.timerFormat(this.segundos);
+    this.timerFormat(this.segundos, this.tempoBreak);
 
     this.intervalID = setInterval(() => {
       if (this.segundos <= 0) {
@@ -90,11 +110,13 @@ export class Timer {
         this.horas--;
       }
 
+      this.tempoTotal++;
       this.segundos--;
 
       if (this.minutos <= 0 && this.segundos <= 0 && this.ciclos < this.cycle) {
         this.ciclos++;
         this.stopTimer();
+        this.tempoBreak = this.shortBreak;
         this.shortBreakTime();
       }
 
@@ -105,12 +127,15 @@ export class Timer {
       ) {
         this.ciclos = 0;
         this.stopTimer();
+        this.tempoBreak = this.longBreak;
         this.longBreakTime();
       }
 
       this.statusTimer = "Focus";
 
       this.onTick(
+        this.tempoBreak,
+        this.tempoTotal,
         this.ciclos,
         "Focus",
         this.horas,
@@ -127,8 +152,17 @@ export class Timer {
 
   resetTimer() {
     this.ciclos = 0;
+    this.tempoTotal = 0;
     this.stopTimer();
-    this.timerFormat(this.focus);
-    this.onTick(this.ciclos, "Focus", this.horas, this.minutos, this.segundos);
+    this.timerFormat(this.focus, this.focus);
+    this.onTick(
+      this.focus,
+      this.tempoTotal,
+      this.ciclos,
+      "Focus",
+      this.horas,
+      this.minutos,
+      this.segundos,
+    );
   }
 }
