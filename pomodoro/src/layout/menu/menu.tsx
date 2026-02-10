@@ -9,6 +9,7 @@ export default function Menu({
   defaultValueFocus,
   defaultValueShortBreak,
   defaultValueLongBreak,
+  defaultValueCycle,
   functionSaveConfig,
 }: MenuProps) {
   const [isShowMenu, setIsShowMenu] = useState(false);
@@ -65,6 +66,17 @@ export default function Menu({
                   defaultValue={defaultValueLongBreak / 60}
                 />
                 min
+              </div>
+            </div>
+            <div className={styles.op}>
+              Cycle
+              <div className={styles.time}>
+                <input
+                  type="number"
+                  id="inputCycle"
+                  name="valueCycle"
+                  defaultValue={defaultValueCycle}
+                />
               </div>
             </div>
           </div>
