@@ -2,6 +2,6 @@ export type MenuProps = {
   defaultValueFocus: number;
   defaultValueShortBreak: number;
   defaultValueLongBreak: number;
-  defualtValueCycle: number;
+  defaultValueCycle: number;
   functionSaveConfig: any;
 };
