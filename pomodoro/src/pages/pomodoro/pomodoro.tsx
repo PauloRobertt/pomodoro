@@ -99,7 +99,7 @@ export default function Pomodoro({
             cy="200"
             fill="white"
             stroke="var(--secundaryColor)"
-            strokeWidth="5px"
+            strokeWidth="3px"
             strokeDasharray={1069}
           />
 
@@ -111,7 +111,7 @@ export default function Pomodoro({
             cy="200"
             fill="white"
             stroke="var(--primaryColor)"
-            strokeWidth="5px"
+            strokeWidth="6px"
             strokeDasharray={1069}
           />
         </svg>
