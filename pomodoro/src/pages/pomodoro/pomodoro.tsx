@@ -48,7 +48,7 @@ export default function Pomodoro({
       timeLong,
       timeCycle,
     );
-  }, [timeFocus]);
+  }, [timeFocus, timeShort, timeLong, timeCycle]);
 
   function saveConfig(e: any): void {
     e.preventDefault();
@@ -61,10 +61,14 @@ export default function Pomodoro({
     const inputLongValue = document.getElementById(
       "inputLong",
     ) as HTMLInputElement;
+    const inputCycleValue = document.getElementById(
+      "inputCycle",
+    ) as HTMLInputElement;
 
     setTimeFocus(Number(inputFocusValue.value) * 60);
     setTimeShort(Number(inputShortValue.value) * 60);
     setTimeLong(Number(inputLongValue.value) * 60);
+    setTimeCycle(Number(inputCycleValue.value));
   }
 
   useEffect(() => {
@@ -87,7 +91,7 @@ export default function Pomodoro({
         defaultValueFocus={timeFocus}
         defaultValueShortBreak={timeShort}
         defaultValueLongBreak={timeLong}
-        defualtValueCycle={timeCycle}
+        defaultValueCycle={timeCycle}
         functionSaveConfig={saveConfig}
       />
       <div className={styles.circleWrapper}>
