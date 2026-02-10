@@ -22,14 +22,16 @@
 
 .circleContent {
   transform: rotate(-90deg);
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
 }
 
 .circleBackground {
 }
 
 .circle {
+  transition: all 1s linear;
+  border: 1px solid blue;
 }
 
 .circleWrapper h1 {
@@ -53,6 +55,7 @@
 }
 
 .containerTimer {
+  max-width: 300px;
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -60,8 +63,16 @@
   align-items: center;
 }
 
+.containerCiclos {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
 .ciclosImg {
   margin: 5px;
-  width: 17px;
-  height: 17px;
+  width: 22px;
+  height: 22px;
 }

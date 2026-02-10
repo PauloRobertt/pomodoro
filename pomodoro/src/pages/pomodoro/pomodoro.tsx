@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type HTMLElementType } from "react";
 import type { TimerProps } from "../../types/timer";
 import { Timer } from "../../class/Timer";
 
@@ -20,7 +20,10 @@ export default function Pomodoro({
   const [timeShort, setTimeShort] = useState(shortBreak);
   const [timeLong, setTimeLong] = useState(longBreak);
   const [timeCycle, setTimeCycle] = useState(cycle);
+  const [tempoTotal, setTempoTotal] = useState(0);
+  const [timeBreak, setTimeBreak] = useState(focus);
 
+  const [ciclosConcluidos, setCiclosConcluidos] = useState(0);
   const [statusTimer, setStatusTimer] = useState("");
   const [isUseTimer, setIsUseTimer] = useState(false);
   const [horas, setHoras] = useState(0);
@@ -31,7 +34,10 @@ export default function Pomodoro({
 
   useEffect(() => {
     timerRef.current = new Timer(
-      (status, hours, min, sec) => {
+      (timerBreak, tempoTotal, ciclosConcluidos, status, hours, min, sec) => {
+        setTimeBreak(timerBreak);
+        setTempoTotal(tempoTotal);
+        setCiclosConcluidos(ciclosConcluidos);
         setStatusTimer(status);
         setHoras(hours);
         setMinutos(min);
@@ -42,9 +48,9 @@ export default function Pomodoro({
       timeLong,
       timeCycle,
     );
-  }, [timeFocus]);
+  }, [timeFocus, timeShort, timeLong, timeCycle]);
 
-  function saveConfig(e: any) {
+  function saveConfig(e: any): void {
     e.preventDefault();
     const inputFocusValue = document.getElementById(
       "inputFocus",
@@ -55,10 +61,28 @@ export default function Pomodoro({
     const inputLongValue = document.getElementById(
       "inputLong",
     ) as HTMLInputElement;
+    const inputCycleValue = document.getElementById(
+      "inputCycle",
+    ) as HTMLInputElement;
 
     setTimeFocus(Number(inputFocusValue.value) * 60);
     setTimeShort(Number(inputShortValue.value) * 60);
     setTimeLong(Number(inputLongValue.value) * 60);
+    setTimeCycle(Number(inputCycleValue.value));
+  }
+
+  useEffect(() => {
+    const circleElement = document.getElementById("circle") as HTMLElement;
+    const tempoRestante = timeBreak - tempoTotal;
+    const percent = (tempoRestante / timeBreak) * 100;
+    calcPerimeter(percent, circleElement);
+  }, [segundos]);
+
+  function calcPerimeter(percent: number, circleElement: any) {
+    const perimeter = 1069;
+    const percentual = (percent / 100) * perimeter;
+    const result = perimeter - percentual;
+    circleElement.style.setProperty("stroke-dashoffset", String(result));
   }
 
   return (
@@ -67,31 +91,32 @@ export default function Pomodoro({
         defaultValueFocus={timeFocus}
         defaultValueShortBreak={timeShort}
         defaultValueLongBreak={timeLong}
-        defualtValueCycle={timeCycle}
+        defaultValueCycle={timeCycle}
         functionSaveConfig={saveConfig}
       />
       <div className={styles.circleWrapper}>
-        <svg width="150" height="150" className={styles.circleContent}>
+        <svg width="200" height="200" className={styles.circleContent}>
           <circle
             className={styles.circle}
-            r="130"
-            cx="150"
-            cy="150"
+            r="170"
+            cx="200"
+            cy="200"
             fill="white"
             stroke="var(--secundaryColor)"
-            strokeWidth="5px"
-            strokeDasharray="816,4"
+            strokeWidth="3px"
+            strokeDasharray={1069}
           />
 
           <circle
             className={styles.circle}
-            r="130"
-            cx="150"
-            cy="150"
+            id="circle"
+            r="170"
+            cx="200"
+            cy="200"
             fill="white"
             stroke="var(--primaryColor)"
-            strokeWidth="5px"
-            strokeDasharray="816,4"
+            strokeWidth="6px"
+            strokeDasharray={1069}
           />
         </svg>
         <div className={styles.containerTimer}>
@@ -101,14 +126,26 @@ export default function Pomodoro({
             {String(segundos).padStart(2, "0")}
           </h1>
           <small>{statusTimer}</small>
-          <small>
-            {Array.from({ length: cycle }, (_, index) => (
+          <small className={styles.containerCiclos}>
+            {Array.from({ length: ciclosConcluidos }, (_, index) => (
               <img
+                key={index}
                 className={styles.ciclosImg}
-                src={OrganizarImgs.pomodoroEmpty}
-                alt=""
+                src={OrganizarImgs.pomodoroDefault}
+                alt="Imagem padrão do pomodoro"
               />
             ))}
+            {Array.from(
+              { length: timeCycle - ciclosConcluidos },
+              (_, index) => (
+                <img
+                  key={index}
+                  className={styles.ciclosImg}
+                  src={OrganizarImgs.pomodoroEmpty}
+                  alt="Imagem do pomodoro vazio"
+                />
+              ),
+            )}
           </small>
         </div>
       </div>
