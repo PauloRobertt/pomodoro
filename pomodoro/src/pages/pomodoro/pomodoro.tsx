@@ -143,7 +143,6 @@ export default function Pomodoro({
               ),
             )}
           </small>
-          <small>Tempo Total: {tempoTotal}</small>
         </div>
       </div>
       <div className={styles.containerButtons}>
