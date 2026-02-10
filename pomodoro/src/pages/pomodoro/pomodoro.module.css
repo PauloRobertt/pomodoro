@@ -30,6 +30,8 @@
 }
 
 .circle {
+  transition: all 1s linear;
+  border: 1px solid blue;
 }
 
 .circleWrapper h1 {
