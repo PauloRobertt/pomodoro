@@ -46,7 +46,7 @@ export class Timer {
       this.tempoBreak,
       this.tempoTotal,
       this.ciclos,
-      "Focus",
+      this.statusTimer,
       this.horas,
       this.minutos,
       this.segundos,
@@ -81,13 +81,15 @@ export class Timer {
         this.stopTimer();
         this.segundos = this.focus;
         this.tempoBreak = this.focus;
+        this.statusTimer = "Focus";
         this.startTime();
       }
+
       this.onTick(
         this.tempoBreak,
         this.tempoTotal,
         this.ciclos,
-        "Focus",
+        this.statusTimer,
         this.horas,
         this.minutos,
         this.segundos,
@@ -132,13 +134,11 @@ export class Timer {
         this.longBreakTime();
       }
 
-      this.statusTimer = "Focus";
-
       this.onTick(
         this.tempoBreak,
         this.tempoTotal,
         this.ciclos,
-        "Focus",
+        this.statusTimer,
         this.horas,
         this.minutos,
         this.segundos,
