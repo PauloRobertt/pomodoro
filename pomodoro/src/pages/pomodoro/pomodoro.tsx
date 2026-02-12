@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type HTMLElementType } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import type { TimerProps } from "../../types/timer";
+
 import { Timer } from "../../class/Timer";
 
 import { OrganizarImgs } from "../../assets/OrganizarImgs.ts";
@@ -16,6 +17,7 @@ export default function Pomodoro({
   longBreak,
   cycle,
 }: TimerProps) {
+  console.log("Renderizado Página");
   const [timeFocus, setTimeFocus] = useState(focus);
   const [timeShort, setTimeShort] = useState(shortBreak);
   const [timeLong, setTimeLong] = useState(longBreak);
@@ -50,7 +52,7 @@ export default function Pomodoro({
     );
   }, [timeFocus, timeShort, timeLong, timeCycle]);
 
-  function saveConfig(e: any): void {
+  const saveConfig = useCallback((e: any): void => {
     e.preventDefault();
     const inputFocusValue = document.getElementById(
       "inputFocus",
@@ -69,7 +71,7 @@ export default function Pomodoro({
     setTimeShort(Number(inputShortValue.value) * 60);
     setTimeLong(Number(inputLongValue.value) * 60);
     setTimeCycle(Number(inputCycleValue.value));
-  }
+  }, []);
 
   useEffect(() => {
     const circleElement = document.getElementById("circle") as HTMLElement;

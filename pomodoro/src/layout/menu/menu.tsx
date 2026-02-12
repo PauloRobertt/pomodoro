@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import styles from "./menu.module.css";
 import stylesButton from "../../components/button/button.module.css";
 import type { MenuProps } from "../../types/menu";
 import { OrganizarImgs } from "../../assets/OrganizarImgs";
 import Button from "../../components/button/button";
 
-export default function Menu({
+function Menu({
   defaultValueFocus,
   defaultValueShortBreak,
   defaultValueLongBreak,
@@ -100,3 +100,5 @@ export default function Menu({
     </div>
   );
 }
+
+export default memo(Menu);
