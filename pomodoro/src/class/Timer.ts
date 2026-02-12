@@ -1,8 +1,10 @@
+import type { Status } from "../types/status";
+
 export class Timer {
   private tempoTotal: number = 0;
   private tempoBreak: number = 0;
 
-  private statusTimer: string = "Focus";
+  private statusTimer: Status = "Focus";
   private horas: number = 0;
   private minutos: number = 0;
   private segundos: number = 0;
