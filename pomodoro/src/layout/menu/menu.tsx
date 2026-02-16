@@ -29,13 +29,25 @@ export default function Menu({
   const [valueLong, setValueLong] = useState(defaultValueLongBreak);
   const [valueCycle, setValueCycle] = useState(defaultValueCycle);
 
-  const teste = () => {
-    setValueFocus(1);
-    console.log("Focus", valueFocus);
-    console.log("Short", valueShort);
-    console.log("Long", valueLong);
-    console.log("Cycle", valueCycle);
-  };
+  function saveMenuConfig(typeTimer: string, value: number): void {
+    switch (typeTimer) {
+      case "Focus":
+        setValueFocus(value);
+        break;
+      case "Short":
+        setValueShort(value);
+        break;
+      case "Long":
+        setValueLong(value);
+        break;
+      case "Cycle":
+        setValueCycle(value);
+        break;
+
+      default:
+        break;
+    }
+  }
 
   return (
     <div className={styles.layoutMenu}>
@@ -50,143 +62,36 @@ export default function Menu({
       </figure>
       <div
         className={
-          isShowMenu ? styles.containerConfigOpen : styles.containerConfig
+          isShowMenu ? styles.containerConfigOpen : styles.containerConfigOpen
         }
       >
         <div className={styles.contentConfig}>
           <div className={styles.opConfig}>
-            <div className={styles.containerOption}>
-              Focus
-              <div className={styles.containerTimer}>
-                <Button
-                  text="-"
-                  action={() => {
-                    setValueFocus((prev) => {
-                      return (prev -= 300);
-                    });
-                  }}
-                  styleButton={stylesButton.buttonTimeControl}
-                />
-                <div className={styles.time}>
-                  <input
-                    type="number"
-                    id="inputFocus"
-                    name="valueFocus"
-                    value={valueFocus / 60}
-                  />
-                  min
-                </div>
-                <Button
-                  text="+"
-                  action={() => {
-                    setValueFocus((prev) => {
-                      return (prev += 300);
-                    });
-                  }}
-                  styleButton={stylesButton.buttonTimeControl}
-                />
-              </div>
-            </div>
-
-            <div className={styles.containerOption}>
-              ShortBreak Duration
-              <div className={styles.containerTimer}>
-                <Button
-                  text="-"
-                  action={() => {
-                    setValueShort((prev) => {
-                      return (prev -= 300);
-                    });
-                  }}
-                  styleButton={stylesButton.buttonTimeControl}
-                />
-                <div className={styles.time}>
-                  <input
-                    type="number"
-                    id="inputShort"
-                    name="valueShort"
-                    value={valueShort / 60}
-                  />
-                  min
-                </div>
-                <Button
-                  text="+"
-                  action={() => {
-                    setValueShort((prev) => {
-                      return (prev += 300);
-                    });
-                  }}
-                  styleButton={stylesButton.buttonTimeControl}
-                />
-              </div>
-            </div>
-
-            <div className={styles.containerOption}>
-              LongBreak Duration
-              <div className={styles.containerTimer}>
-                <Button
-                  text="-"
-                  action={() => {
-                    setValueLong((prev) => {
-                      return (prev -= 300);
-                    });
-                  }}
-                  styleButton={stylesButton.buttonTimeControl}
-                />
-                <div className={styles.time}>
-                  <input
-                    type="number"
-                    id="inputLong"
-                    name="valueLong"
-                    value={valueLong / 60}
-                  />
-                  min
-                </div>
-                <Button
-                  text="+"
-                  action={() => {
-                    setValueLong((prev) => {
-                      return (prev += 300);
-                    });
-                  }}
-                  styleButton={stylesButton.buttonTimeControl}
-                />
-              </div>
-            </div>
-
-            <div className={styles.containerOption}>
-              Cycles
-              <div className={styles.containerTimer}>
-                <Button
-                  text="-"
-                  action={() => {
-                    setValueCycle((prev) => {
-                      return (prev -= 1);
-                    });
-                  }}
-                  styleButton={stylesButton.buttonTimeControl}
-                />
-                <div className={styles.time}>
-                  <input
-                    type="number"
-                    id="inputCycle"
-                    name="valueCycle"
-                    value={valueCycle}
-                  />
-                </div>
-                <Button
-                  text="+"
-                  action={() => {
-                    setValueCycle((prev) => {
-                      return (prev += 1);
-                    });
-                  }}
-                  styleButton={stylesButton.buttonTimeControl}
-                />
-              </div>
-            </div>
+            <OptionMenu
+              text="Focus"
+              type="number"
+              value={valueFocus}
+              functionTeste={saveMenuConfig}
+            />
+            <OptionMenu
+              text="Short"
+              type="number"
+              value={valueShort}
+              functionTeste={saveMenuConfig}
+            />
+            <OptionMenu
+              text="Long"
+              type="number"
+              value={valueLong}
+              functionTeste={saveMenuConfig}
+            />
+            <OptionMenu
+              text="Cycle"
+              type="number"
+              value={valueCycle}
+              functionTeste={saveMenuConfig}
+            />
           </div>
-
           <div className={styles.buttonsConfig}>
             <Button
               action={() => {
@@ -196,7 +101,15 @@ export default function Menu({
               text="Cancel"
             />
             <Button
-              action={functionSaveConfig}
+              action={(e: React.FormEvent) => {
+                functionSaveConfig(
+                  e,
+                  valueFocus,
+                  valueShort,
+                  valueLong,
+                  valueCycle,
+                );
+              }}
               styleButton={stylesButton.menuButton}
               text="Save"
             />
