@@ -50,25 +50,20 @@ export default function Pomodoro({
     );
   }, [timeFocus, timeShort, timeLong, timeCycle]);
 
-  function saveConfig(e: any): void {
+  function saveConfig(
+    e: React.FormEvent,
+    inputFocusValue: number,
+    inputShortValue: number,
+    inputLongValue: number,
+    inputCycleValue: number,
+  ): void {
     e.preventDefault();
-    const inputFocusValue = document.getElementById(
-      "inputFocus",
-    ) as HTMLInputElement;
-    const inputShortValue = document.getElementById(
-      "inputShort",
-    ) as HTMLInputElement;
-    const inputLongValue = document.getElementById(
-      "inputLong",
-    ) as HTMLInputElement;
-    const inputCycleValue = document.getElementById(
-      "inputCycle",
-    ) as HTMLInputElement;
-
-    setTimeFocus(Number(inputFocusValue.value) * 60);
-    setTimeShort(Number(inputShortValue.value) * 60);
-    setTimeLong(Number(inputLongValue.value) * 60);
-    setTimeCycle(Number(inputCycleValue.value));
+    setTimeFocus(inputFocusValue);
+    setTimeShort(inputShortValue);
+    setTimeLong(inputLongValue);
+    setTimeCycle(inputCycleValue);
+    setIsUseTimer(false);
+    timerRef.current?.resetTimer();
   }
 
   useEffect(() => {
