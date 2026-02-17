@@ -12,12 +12,12 @@ export default function OptionMenu(props: optionMenu) {
 
   const handleOnChange = (e: any) => {
     setDefaultValue(() => {
-      return props.text !== "Cycle" ? e.target.value * 60 : e.target.value;
+      return props.id !== "cycle" ? e.target.value * 60 : e.target.value;
     });
   };
 
   useEffect(() => {
-    props.functionTeste(props.text, defaultValue);
+    props.functionTeste(props.id, defaultValue);
   }, [defaultValue]);
 
   return (
@@ -29,7 +29,7 @@ export default function OptionMenu(props: optionMenu) {
           action={() => {
             setDefaultValue((prev: number) => {
               if (prev > 0)
-                return props.text !== "Cycle" ? (prev -= 60) : (prev -= 1);
+                return props.id !== "cycle" ? (prev -= 60) : (prev -= 1);
               return prev;
             });
           }}
@@ -38,17 +38,17 @@ export default function OptionMenu(props: optionMenu) {
         <div className={styles.time}>
           <input
             type={props.type}
-            value={props.text !== "Cycle" ? defaultValue / 60 : defaultValue}
+            value={props.id !== "cycle" ? defaultValue / 60 : defaultValue}
             onChange={handleOnChange}
           />
-          {props.text !== "Cycle" ? "min" : ""}
+          {props.id !== "cycle" ? "min" : ""}
         </div>
         <Button
           text="+"
           action={() => {
             setDefaultValue((prev: number) => {
               if (prev >= 0)
-                return props.text !== "Cycle" ? (prev += 60) : (prev += 1);
+                return props.id !== "cycle" ? (prev += 60) : (prev += 1);
               return prev;
             });
           }}
