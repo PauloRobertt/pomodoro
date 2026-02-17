@@ -31,16 +31,16 @@ export default function Menu({
 
   function saveMenuConfig(typeTimer: string, value: number): void {
     switch (typeTimer) {
-      case "Focus":
+      case "focus":
         setValueFocus(value);
         break;
-      case "Short":
+      case "short":
         setValueShort(value);
         break;
-      case "Long":
+      case "long":
         setValueLong(value);
         break;
-      case "Cycle":
+      case "cycle":
         setValueCycle(value);
         break;
 
@@ -68,25 +68,29 @@ export default function Menu({
         <div className={styles.contentConfig}>
           <div className={styles.opConfig}>
             <OptionMenu
-              text="Focus"
+              id="focus"
+              text="Focus Duration"
               type="number"
               value={valueFocus}
               functionTeste={saveMenuConfig}
             />
             <OptionMenu
-              text="Short"
+              id="short"
+              text="Short Duration"
               type="number"
               value={valueShort}
               functionTeste={saveMenuConfig}
             />
             <OptionMenu
-              text="Long"
+              id="long"
+              text="Long Duration"
               type="number"
               value={valueLong}
               functionTeste={saveMenuConfig}
             />
             <OptionMenu
-              text="Cycle"
+              id="cycle"
+              text="Cycle Duration"
               type="number"
               value={valueCycle}
               functionTeste={saveMenuConfig}
