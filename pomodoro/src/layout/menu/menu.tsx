@@ -101,7 +101,7 @@ export default function Menu({
               action={() => {
                 setIsShowMenu((prev) => !prev);
               }}
-              styleButton={stylesButton.menuButton}
+              styleButton={stylesButton.menuButtonCancel}
               text="Cancel"
             />
             <Button
