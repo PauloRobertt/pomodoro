@@ -62,7 +62,7 @@ export default function Menu({
       </figure>
       <div
         className={
-          isShowMenu ? styles.containerConfigOpen : styles.containerConfigOpen
+          isShowMenu ? styles.containerConfigOpen : styles.containerConfig
         }
       >
         <div className={styles.contentConfig}>
