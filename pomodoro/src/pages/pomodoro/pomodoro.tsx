@@ -62,6 +62,8 @@ export default function Pomodoro({
     setTimeShort(inputShortValue);
     setTimeLong(inputLongValue);
     setTimeCycle(inputCycleValue);
+    setIsUseTimer(false);
+    timerRef.current?.resetTimer();
   }
 
   useEffect(() => {
