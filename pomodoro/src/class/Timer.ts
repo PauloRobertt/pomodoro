@@ -82,6 +82,7 @@ export class Timer {
         this.segundos = this.focus;
         this.tempoBreak = this.focus;
         this.statusTimer = "Focus";
+        this.tempoTotal = 0;
         this.startTime();
       }
 
@@ -99,7 +100,6 @@ export class Timer {
 
   startTime() {
     if (this.intervalID) return;
-    this.tempoTotal = 0;
     this.timerFormat(this.segundos, this.tempoBreak);
 
     this.intervalID = setInterval(() => {
