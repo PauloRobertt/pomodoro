@@ -12,7 +12,9 @@ export default function OptionMenu(props: optionMenu) {
 
   const handleOnChange = (e: any) => {
     setDefaultValue(() => {
-      return props.id !== "cycle" ? e.target.value * 60 : e.target.value;
+      return props.id !== "cycle"
+        ? Number(e.target.value) * 60
+        : Number(e.target.value);
     });
   };
 
@@ -28,7 +30,7 @@ export default function OptionMenu(props: optionMenu) {
           text="-"
           action={() => {
             setDefaultValue((prev: number) => {
-              if (prev > 0)
+              if (prev > 1)
                 return props.id !== "cycle" ? (prev -= 60) : (prev -= 1);
               return prev;
             });
@@ -47,8 +49,9 @@ export default function OptionMenu(props: optionMenu) {
           text="+"
           action={() => {
             setDefaultValue((prev: number) => {
-              if (prev >= 0)
+              if (prev >= 0) {
                 return props.id !== "cycle" ? (prev += 60) : (prev += 1);
+              }
               return prev;
             });
           }}
