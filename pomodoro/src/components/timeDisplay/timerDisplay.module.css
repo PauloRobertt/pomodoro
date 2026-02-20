@@ -42,7 +42,8 @@
 }
 
 .containerCiclos {
-  width: 100%;
+  max-width: 200px;
+  height: 30px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
