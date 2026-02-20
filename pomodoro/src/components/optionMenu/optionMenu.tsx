@@ -11,10 +11,9 @@ export default function OptionMenu(props: optionMenu) {
   const [defaultValue, setDefaultValue] = useState(props.value);
 
   const handleOnChange = (e: any) => {
+    let value = Math.trunc(e.target.value);
     setDefaultValue(() => {
-      return props.id !== "cycle"
-        ? Number(e.target.value) * 60
-        : Number(e.target.value);
+      return props.id !== "cycle" ? Number(value) * 60 : Number(value);
     });
   };
 
@@ -30,9 +29,8 @@ export default function OptionMenu(props: optionMenu) {
           text="-"
           action={() => {
             setDefaultValue((prev: number) => {
-              if (prev > 1)
-                return props.id !== "cycle" ? (prev -= 60) : (prev -= 1);
-              return prev;
+              if (props.id !== "cycle") return prev > 60 ? (prev -= 60) : prev;
+              return prev > 1 ? (prev -= 1) : prev;
             });
           }}
           styleButton={stylesButton.buttonTimeControl}
