@@ -30,22 +30,24 @@ export default function Menu({
   const [valueCycle, setValueCycle] = useState(defaultValueCycle);
 
   function saveMenuConfig(typeTimer: string, value: number): void {
-    switch (typeTimer) {
-      case "focus":
-        setValueFocus(value);
-        break;
-      case "short":
-        setValueShort(value);
-        break;
-      case "long":
-        setValueLong(value);
-        break;
-      case "cycle":
-        setValueCycle(value);
-        break;
+    if (value > 0) {
+      switch (typeTimer) {
+        case "focus":
+          setValueFocus(value);
+          break;
+        case "short":
+          setValueShort(value);
+          break;
+        case "long":
+          setValueLong(value);
+          break;
+        case "cycle":
+          setValueCycle(value);
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
   }
 
