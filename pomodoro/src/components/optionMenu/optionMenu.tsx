@@ -11,13 +11,14 @@ export default function OptionMenu(props: optionMenu) {
   const [defaultValue, setDefaultValue] = useState(props.value);
 
   const handleOnChange = (e: any) => {
+    let value = Math.trunc(e.target.value);
     setDefaultValue(() => {
-      return props.id !== "cycle" ? e.target.value * 60 : e.target.value;
+      return props.id !== "cycle" ? Number(value) * 60 : Number(value);
     });
   };
 
   useEffect(() => {
-    props.functionTeste(props.id, defaultValue);
+    props.functionSaveConfig(props.id, defaultValue);
   }, [defaultValue]);
 
   return (
@@ -28,9 +29,8 @@ export default function OptionMenu(props: optionMenu) {
           text="-"
           action={() => {
             setDefaultValue((prev: number) => {
-              if (prev > 0)
-                return props.id !== "cycle" ? (prev -= 60) : (prev -= 1);
-              return prev;
+              if (props.id !== "cycle") return prev > 60 ? (prev -= 60) : prev;
+              return prev > 1 ? (prev -= 1) : prev;
             });
           }}
           styleButton={stylesButton.buttonTimeControl}
@@ -47,8 +47,9 @@ export default function OptionMenu(props: optionMenu) {
           text="+"
           action={() => {
             setDefaultValue((prev: number) => {
-              if (prev >= 0)
+              if (prev >= 0) {
                 return props.id !== "cycle" ? (prev += 60) : (prev += 1);
+              }
               return prev;
             });
           }}

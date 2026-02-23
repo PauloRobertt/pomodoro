@@ -30,22 +30,24 @@ export default function Menu({
   const [valueCycle, setValueCycle] = useState(defaultValueCycle);
 
   function saveMenuConfig(typeTimer: string, value: number): void {
-    switch (typeTimer) {
-      case "focus":
-        setValueFocus(value);
-        break;
-      case "short":
-        setValueShort(value);
-        break;
-      case "long":
-        setValueLong(value);
-        break;
-      case "cycle":
-        setValueCycle(value);
-        break;
+    if (value > 0) {
+      switch (typeTimer) {
+        case "focus":
+          setValueFocus(value);
+          break;
+        case "short":
+          setValueShort(value);
+          break;
+        case "long":
+          setValueLong(value);
+          break;
+        case "cycle":
+          setValueCycle(value);
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
   }
 
@@ -72,28 +74,28 @@ export default function Menu({
               text="Focus Duration"
               type="number"
               value={valueFocus}
-              functionTeste={saveMenuConfig}
+              functionSaveConfig={saveMenuConfig}
             />
             <OptionMenu
               id="short"
               text="Short Duration"
               type="number"
               value={valueShort}
-              functionTeste={saveMenuConfig}
+              functionSaveConfig={saveMenuConfig}
             />
             <OptionMenu
               id="long"
               text="Long Duration"
               type="number"
               value={valueLong}
-              functionTeste={saveMenuConfig}
+              functionSaveConfig={saveMenuConfig}
             />
             <OptionMenu
               id="cycle"
               text="Cycle Duration"
               type="number"
               value={valueCycle}
-              functionTeste={saveMenuConfig}
+              functionSaveConfig={saveMenuConfig}
             />
           </div>
           <div className={styles.buttonsConfig}>

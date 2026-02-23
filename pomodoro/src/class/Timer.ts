@@ -104,12 +104,12 @@ export class Timer {
 
     this.intervalID = setInterval(() => {
       if (this.segundos <= 0) {
-        this.segundos = 59;
+        this.segundos = 60;
         this.minutos--;
       }
 
       if (this.minutos <= 0 && this.horas > 0) {
-        this.minutos = 59;
+        this.minutos = 60;
         this.horas--;
       }
 
