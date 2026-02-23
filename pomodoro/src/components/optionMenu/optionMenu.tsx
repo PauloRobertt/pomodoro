@@ -18,7 +18,7 @@ export default function OptionMenu(props: optionMenu) {
   };
 
   useEffect(() => {
-    props.functionTeste(props.id, defaultValue);
+    props.functionSaveConfig(props.id, defaultValue);
   }, [defaultValue]);
 
   return (

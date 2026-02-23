@@ -74,28 +74,28 @@ export default function Menu({
               text="Focus Duration"
               type="number"
               value={valueFocus}
-              functionTeste={saveMenuConfig}
+              functionSaveConfig={saveMenuConfig}
             />
             <OptionMenu
               id="short"
               text="Short Duration"
               type="number"
               value={valueShort}
-              functionTeste={saveMenuConfig}
+              functionSaveConfig={saveMenuConfig}
             />
             <OptionMenu
               id="long"
               text="Long Duration"
               type="number"
               value={valueLong}
-              functionTeste={saveMenuConfig}
+              functionSaveConfig={saveMenuConfig}
             />
             <OptionMenu
               id="cycle"
               text="Cycle Duration"
               type="number"
               value={valueCycle}
-              functionTeste={saveMenuConfig}
+              functionSaveConfig={saveMenuConfig}
             />
           </div>
           <div className={styles.buttonsConfig}>
