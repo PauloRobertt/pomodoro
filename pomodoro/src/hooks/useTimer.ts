@@ -64,7 +64,6 @@ export function useTimer(props: useTimer) {
       teste--;
 
       setFocusSegundos(teste);
-
       setHoras(horasCalculadas);
       setMinutos(minutosCalculados);
       setSegundos(segundosCalculados);
@@ -73,8 +72,8 @@ export function useTimer(props: useTimer) {
     setIntervalID(intervalIDTest);
   };
 
-  const stopTime = () => {
-    clearInterval(intervalID);
+  const stopTime = (interval: number | undefined = intervalID) => {
+    clearInterval(interval);
     setIntervalID(undefined);
   };
 
