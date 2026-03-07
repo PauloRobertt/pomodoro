@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import type { useTimer } from "../types/useTimer";
 
@@ -20,7 +20,7 @@ export function useTimer(props: useTimer) {
   const [segundos, setSegundos] = useState(0);
   const [statusTimer, setStatusTimer] = useState("");
 
-  const [intervalID, setIntervalID] = useState<number | undefined>(undefined);
+  const intervalID = useRef<number | undefined>(undefined);
 
   const timerFormat = (
     valueSeconds: number,
@@ -45,16 +45,15 @@ export function useTimer(props: useTimer) {
     var horasCalculadas = Math.floor(focusSegundos / 3600);
     var minutosCalculados = Math.floor(focusSegundos / 60);
     var segundosCalculados = focusSegundos % 60;
-    var tempoTotalCalculado = tempoTotal;
     var teste = focusSegundos;
 
-    var intervalIDFocus = setInterval(() => {
+    intervalID.current = setInterval(() => {
       if (
         !(horasCalculadas > 0) &&
         !(minutosCalculados > 0) &&
         !(segundosCalculados > 0)
       ) {
-        stopTime(intervalIDFocus);
+        stopTime(intervalID.current);
         return;
       }
 
@@ -72,12 +71,13 @@ export function useTimer(props: useTimer) {
       segundosCalculados--;
       teste--;
 
-      if (segundosCalculados <= 0 && minutosCalculados <= 0) {
-        teste = focus;
+      if (minutosCalculados <= 0 && segundosCalculados <= 0) {
+        setFocusSegundos(focus);
         setCiclosConcluidos((prevCiclo) => prevCiclo + 1);
         setTempoTotal(0);
-        stopTime(intervalIDFocus);
+        stopTime(intervalID.current);
         shortBreakTime();
+        return;
       }
 
       setFocusSegundos(teste);
@@ -85,8 +85,6 @@ export function useTimer(props: useTimer) {
       setMinutos(minutosCalculados);
       setSegundos(segundosCalculados);
     }, 1000);
-
-    setIntervalID(intervalIDFocus);
   };
 
   const shortBreakTime = () => {
@@ -95,16 +93,15 @@ export function useTimer(props: useTimer) {
     var horasCalculadas = Math.floor(shortSegundos / 3600);
     var minutosCalculados = Math.floor(shortSegundos / 60);
     var segundosCalculados = shortSegundos % 60;
-    var tempoTotalCalculado = tempoTotal;
     var teste = shortSegundos;
 
-    var intervalIDShort = setInterval(() => {
+    intervalID.current = setInterval(() => {
       if (
         !(horasCalculadas > 0) &&
         !(minutosCalculados > 0) &&
         !(segundosCalculados > 0)
       ) {
-        stopTime(intervalIDShort);
+        stopTime(intervalID.current);
         return;
       }
 
@@ -125,7 +122,7 @@ export function useTimer(props: useTimer) {
       if (segundosCalculados <= 0 && minutosCalculados <= 0) {
         teste = shortBreak;
         setTempoTotal(0);
-        stopTime(intervalIDShort);
+        stopTime(intervalID.current);
         focusTime();
       }
 
@@ -134,12 +131,10 @@ export function useTimer(props: useTimer) {
       setMinutos(minutosCalculados);
       setSegundos(segundosCalculados);
     }, 1000);
-
-    setIntervalID(intervalIDShort);
   };
 
   const startTime = () => {
-    if (intervalID) return;
+    if (intervalID.current) return;
     switch (timeBreak) {
       case focus:
         focusTime();
@@ -154,9 +149,9 @@ export function useTimer(props: useTimer) {
     }
   };
 
-  const stopTime = (interval: number | undefined = intervalID) => {
+  const stopTime = (interval: number | undefined = intervalID.current) => {
     clearInterval(interval);
-    setIntervalID(undefined);
+    intervalID.current = undefined;
   };
 
   const resetTime = () => {
