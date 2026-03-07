@@ -10,6 +10,7 @@ export function useTimer(props: useTimer) {
 
   const [focusSegundos, setFocusSegundos] = useState(focus);
   const [shortSegundos, setShortSegundos] = useState(shortBreak);
+  const [longSegundos, setLongSegundos] = useState(longBreak);
 
   const [tempoTotal, setTempoTotal] = useState(0);
   const [timeBreak, setTimeBreak] = useState(0);
@@ -21,6 +22,7 @@ export function useTimer(props: useTimer) {
   const [statusTimer, setStatusTimer] = useState("");
 
   const intervalID = useRef<number | undefined>(undefined);
+  const ciclosFeitos = useRef<number>(0);
 
   const timerFormat = (
     valueSeconds: number,
@@ -71,12 +73,29 @@ export function useTimer(props: useTimer) {
       segundosCalculados--;
       teste--;
 
-      if (minutosCalculados <= 0 && segundosCalculados <= 0) {
+      if (
+        minutosCalculados <= 0 &&
+        segundosCalculados <= 0 &&
+        ciclosFeitos.current < cycle
+      ) {
+        ciclosFeitos.current = ciclosFeitos.current + 1;
         setFocusSegundos(focus);
         setCiclosConcluidos((prevCiclo) => prevCiclo + 1);
         setTempoTotal(0);
         stopTime(intervalID.current);
         shortBreakTime();
+        return;
+      }
+
+      if (
+        minutosCalculados <= 0 &&
+        segundosCalculados <= 0 &&
+        ciclosFeitos.current === cycle
+      ) {
+        setFocusSegundos(focus);
+        setTempoTotal(0);
+        stopTime(intervalID.current);
+        longBreakTime();
         return;
       }
 
@@ -133,6 +152,53 @@ export function useTimer(props: useTimer) {
     }, 1000);
   };
 
+  const longBreakTime = () => {
+    timerFormat(longSegundos, longBreak, "LongBreak");
+
+    var horasCalculadas = Math.floor(longSegundos / 3600);
+    var minutosCalculados = Math.floor(longSegundos / 60);
+    var segundosCalculados = longSegundos % 60;
+    var teste = longSegundos;
+
+    intervalID.current = setInterval(() => {
+      if (
+        !(horasCalculadas > 0) &&
+        !(minutosCalculados > 0) &&
+        !(segundosCalculados > 0)
+      ) {
+        stopTime(intervalID.current);
+        return;
+      }
+
+      if (segundosCalculados <= 0) {
+        segundosCalculados = 60;
+        minutosCalculados--;
+      }
+
+      if (minutosCalculados <= 0 && horasCalculadas > 0) {
+        segundosCalculados = 60;
+        horasCalculadas--;
+      }
+
+      setTempoTotal((prevTempoTotal) => prevTempoTotal + 1);
+      segundosCalculados--;
+      teste--;
+
+      if (segundosCalculados <= 0 && minutosCalculados <= 0) {
+        setCiclosConcluidos(0);
+        teste = longBreak;
+        setTempoTotal(0);
+        stopTime(intervalID.current);
+        focusTime();
+      }
+
+      setLongSegundos(teste);
+      setHoras(horasCalculadas);
+      setMinutos(minutosCalculados);
+      setSegundos(segundosCalculados);
+    }, 1000);
+  };
+
   const startTime = () => {
     if (intervalID.current) return;
     switch (timeBreak) {
@@ -142,6 +208,10 @@ export function useTimer(props: useTimer) {
 
       case shortBreak:
         shortBreakTime();
+        break;
+
+      case longBreak:
+        longBreakTime();
         break;
 
       default:
@@ -155,6 +225,7 @@ export function useTimer(props: useTimer) {
   };
 
   const resetTime = () => {
+    ciclosFeitos.current = 0;
     setCiclosConcluidos(0);
     setTempoTotal(0);
     setFocusSegundos(focus);
