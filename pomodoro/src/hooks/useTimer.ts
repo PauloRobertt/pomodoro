@@ -3,10 +3,16 @@ import { useEffect, useState, useRef } from "react";
 import type { useTimer } from "../types/useTimer";
 
 export function useTimer(props: useTimer) {
-  const [focus, setFocus] = useState(props.focus);
-  const [shortBreak, setShortBreak] = useState(props.shortBreak);
-  const [longBreak, setLongBreak] = useState(props.longBreak);
-  const [cycle, setCycle] = useState(props.cycle);
+  const focus = props.focus;
+  const shortBreak = props.shortBreak;
+  const longBreak = props.longBreak;
+  const cycle = props.cycle;
+
+  useEffect(() => {
+    setFocusSegundos(focus);
+    setShortSegundos(shortBreak);
+    setLongSegundos(longBreak);
+  }, [focus, shortBreak, longBreak]);
 
   const [focusSegundos, setFocusSegundos] = useState(focus);
   const [shortSegundos, setShortSegundos] = useState(shortBreak);
@@ -20,9 +26,30 @@ export function useTimer(props: useTimer) {
   const [minutos, setMinutos] = useState(0);
   const [segundos, setSegundos] = useState(0);
   const [statusTimer, setStatusTimer] = useState("");
+  const [mode, setMode] = useState("");
 
   const intervalID = useRef<number | undefined>(undefined);
   const ciclosFeitos = useRef<number>(0);
+
+  useEffect(() => {
+    switch (mode) {
+      case "modeFocus":
+        stopTime();
+        focusTime();
+        break;
+      case "modeShort":
+        stopTime();
+        shortBreakTime();
+        break;
+      case "modeLong":
+        stopTime();
+        longBreakTime();
+        break;
+
+      default:
+        break;
+    }
+  }, [mode]);
 
   const timerFormat = (
     valueSeconds: number,
@@ -32,7 +59,7 @@ export function useTimer(props: useTimer) {
     setTimeBreak(tempoBreak);
     setStatusTimer(statusTimer);
 
-    const horasCalculadas = Math.floor(valueSeconds / 3600);
+    const horasCalculadas = Math.floor((valueSeconds % 3600) / 60);
     const minutosCalculados = Math.floor(valueSeconds / 60);
     const segundosCalculados = valueSeconds % 60;
 
@@ -44,7 +71,7 @@ export function useTimer(props: useTimer) {
   const focusTime = () => {
     timerFormat(focusSegundos, focus, "Focus");
 
-    var horasCalculadas = Math.floor(focusSegundos / 3600);
+    var horasCalculadas = Math.floor((focusSegundos % 3600) / 60);
     var minutosCalculados = Math.floor(focusSegundos / 60);
     var segundosCalculados = focusSegundos % 60;
     var teste = focusSegundos;
@@ -78,12 +105,12 @@ export function useTimer(props: useTimer) {
         segundosCalculados <= 0 &&
         ciclosFeitos.current < cycle
       ) {
-        ciclosFeitos.current = ciclosFeitos.current + 1;
         setFocusSegundos(focus);
+        ciclosFeitos.current = ciclosFeitos.current + 1;
         setCiclosConcluidos((prevCiclo) => prevCiclo + 1);
         setTempoTotal(0);
         stopTime(intervalID.current);
-        shortBreakTime();
+        setMode("modeShort");
         return;
       }
 
@@ -92,10 +119,11 @@ export function useTimer(props: useTimer) {
         segundosCalculados <= 0 &&
         ciclosFeitos.current === cycle
       ) {
+        setCiclosConcluidos(0);
         setFocusSegundos(focus);
         setTempoTotal(0);
         stopTime(intervalID.current);
-        longBreakTime();
+        setMode("modeLong");
         return;
       }
 
@@ -109,7 +137,7 @@ export function useTimer(props: useTimer) {
   const shortBreakTime = () => {
     timerFormat(shortSegundos, shortBreak, "ShortBreak");
 
-    var horasCalculadas = Math.floor(shortSegundos / 3600);
+    var horasCalculadas = Math.floor((shortSegundos % 3600) / 60);
     var minutosCalculados = Math.floor(shortSegundos / 60);
     var segundosCalculados = shortSegundos % 60;
     var teste = shortSegundos;
@@ -142,7 +170,7 @@ export function useTimer(props: useTimer) {
         teste = shortBreak;
         setTempoTotal(0);
         stopTime(intervalID.current);
-        focusTime();
+        setMode("modeFocus");
       }
 
       setShortSegundos(teste);
@@ -155,7 +183,7 @@ export function useTimer(props: useTimer) {
   const longBreakTime = () => {
     timerFormat(longSegundos, longBreak, "LongBreak");
 
-    var horasCalculadas = Math.floor(longSegundos / 3600);
+    var horasCalculadas = Math.floor((longSegundos % 3600) / 60);
     var minutosCalculados = Math.floor(longSegundos / 60);
     var segundosCalculados = longSegundos % 60;
     var teste = longSegundos;
@@ -189,7 +217,7 @@ export function useTimer(props: useTimer) {
         teste = longBreak;
         setTempoTotal(0);
         stopTime(intervalID.current);
-        focusTime();
+        setMode("modeFocus");
       }
 
       setLongSegundos(teste);
@@ -226,6 +254,7 @@ export function useTimer(props: useTimer) {
 
   const resetTime = () => {
     ciclosFeitos.current = 0;
+    setMode("");
     setCiclosConcluidos(0);
     setTempoTotal(0);
     setFocusSegundos(focus);
