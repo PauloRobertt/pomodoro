@@ -34,14 +34,17 @@ export function useTimer(props: useTimer) {
   useEffect(() => {
     switch (mode) {
       case "modeFocus":
+        setTempoTotal(0);
         stopTime();
         focusTime();
         break;
       case "modeShort":
+        setTempoTotal(0);
         stopTime();
         shortBreakTime();
         break;
       case "modeLong":
+        setTempoTotal(0);
         stopTime();
         longBreakTime();
         break;
@@ -71,8 +74,8 @@ export function useTimer(props: useTimer) {
   const focusTime = () => {
     timerFormat(focusSegundos, focus, "Focus");
 
-    var horasCalculadas = Math.floor((focusSegundos % 3600) / 60);
-    var minutosCalculados = Math.floor(focusSegundos / 60);
+    var horasCalculadas = Math.floor(focusSegundos / 3600);
+    var minutosCalculados = Math.floor((focusSegundos % 3600) / 60);
     var segundosCalculados = focusSegundos % 60;
     var teste = focusSegundos;
 
@@ -92,6 +95,7 @@ export function useTimer(props: useTimer) {
       }
 
       if (minutosCalculados <= 0 && horasCalculadas > 0) {
+        minutosCalculados = 59;
         segundosCalculados = 60;
         horasCalculadas--;
       }
@@ -119,7 +123,7 @@ export function useTimer(props: useTimer) {
         segundosCalculados <= 0 &&
         ciclosFeitos.current === cycle
       ) {
-        setCiclosConcluidos(0);
+        ciclosFeitos.current = 0;
         setFocusSegundos(focus);
         setTempoTotal(0);
         stopTime(intervalID.current);
@@ -137,8 +141,8 @@ export function useTimer(props: useTimer) {
   const shortBreakTime = () => {
     timerFormat(shortSegundos, shortBreak, "ShortBreak");
 
-    var horasCalculadas = Math.floor((shortSegundos % 3600) / 60);
-    var minutosCalculados = Math.floor(shortSegundos / 60);
+    var horasCalculadas = Math.floor(shortSegundos / 3600);
+    var minutosCalculados = Math.floor((shortSegundos % 3600) / 60);
     var segundosCalculados = shortSegundos % 60;
     var teste = shortSegundos;
 
@@ -158,6 +162,7 @@ export function useTimer(props: useTimer) {
       }
 
       if (minutosCalculados <= 0 && horasCalculadas > 0) {
+        minutosCalculados = 59;
         segundosCalculados = 60;
         horasCalculadas--;
       }
@@ -168,7 +173,7 @@ export function useTimer(props: useTimer) {
 
       if (segundosCalculados <= 0 && minutosCalculados <= 0) {
         teste = shortBreak;
-        setTempoTotal(0);
+
         stopTime(intervalID.current);
         setMode("modeFocus");
       }
@@ -183,8 +188,8 @@ export function useTimer(props: useTimer) {
   const longBreakTime = () => {
     timerFormat(longSegundos, longBreak, "LongBreak");
 
-    var horasCalculadas = Math.floor((longSegundos % 3600) / 60);
-    var minutosCalculados = Math.floor(longSegundos / 60);
+    var horasCalculadas = Math.floor(longSegundos / 3600);
+    var minutosCalculados = Math.floor((longSegundos % 3600) / 60);
     var segundosCalculados = longSegundos % 60;
     var teste = longSegundos;
 
@@ -204,6 +209,7 @@ export function useTimer(props: useTimer) {
       }
 
       if (minutosCalculados <= 0 && horasCalculadas > 0) {
+        minutosCalculados = 59;
         segundosCalculados = 60;
         horasCalculadas--;
       }
@@ -215,7 +221,6 @@ export function useTimer(props: useTimer) {
       if (segundosCalculados <= 0 && minutosCalculados <= 0) {
         setCiclosConcluidos(0);
         teste = longBreak;
-        setTempoTotal(0);
         stopTime(intervalID.current);
         setMode("modeFocus");
       }
