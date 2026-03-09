@@ -59,8 +59,8 @@ export function useTimer(props: useTimer) {
     setTimeBreak(tempoBreak);
     setStatusTimer(statusTimer);
 
-    const horasCalculadas = Math.floor((valueSeconds % 3600) / 60);
-    const minutosCalculados = Math.floor(valueSeconds / 60);
+    const horasCalculadas = Math.floor(valueSeconds / 3600);
+    const minutosCalculados = Math.floor((valueSeconds % 3600) / 60);
     const segundosCalculados = valueSeconds % 60;
 
     setHoras(horasCalculadas);
