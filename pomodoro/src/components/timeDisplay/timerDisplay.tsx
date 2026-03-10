@@ -5,9 +5,11 @@ import { useEffect } from "react";
 
 export default function TimerDisplay(props: TimerDisplayProps) {
   useEffect(() => {
+    const timeBreakValue = props.timeBreak;
+    const totalTimeValue = props.tempoTotal;
     const circleElement = document.getElementById("circle") as HTMLElement;
-    const tempoRestante = props.timeBreak - props.tempoTotal;
-    const percent = (tempoRestante / props.timeBreak) * 100;
+    const remainingTime = timeBreakValue - totalTimeValue;
+    const percent = (remainingTime / timeBreakValue) * 100;
     calcPerimeter(percent, circleElement);
   }, [props.segundos]);
 
