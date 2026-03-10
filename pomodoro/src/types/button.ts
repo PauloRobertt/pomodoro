@@ -1,5 +1,7 @@
 export type ButtonProps = {
-  action: any;
   text: string;
   styleButton: string;
+  action?: any;
+  onMouseUp?: any;
+  onMouseDown?: any;
 };
