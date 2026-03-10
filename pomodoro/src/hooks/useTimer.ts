@@ -35,17 +35,17 @@ export function useTimer(props: useTimer) {
     switch (mode) {
       case "modeFocus":
         setTempoTotal(0);
-        stopTime();
+        stopTime(intervalID.current);
         focusTime();
         break;
       case "modeShort":
         setTempoTotal(0);
-        stopTime();
+        stopTime(intervalID.current);
         shortBreakTime();
         break;
       case "modeLong":
         setTempoTotal(0);
-        stopTime();
+        stopTime(intervalID.current);
         longBreakTime();
         break;
 
@@ -173,7 +173,6 @@ export function useTimer(props: useTimer) {
 
       if (segundosCalculados <= 0 && minutosCalculados <= 0) {
         teste = shortBreak;
-
         stopTime(intervalID.current);
         setMode("modeFocus");
       }
@@ -263,7 +262,7 @@ export function useTimer(props: useTimer) {
     setCiclosConcluidos(0);
     setTempoTotal(0);
     setFocusSegundos(focus);
-    stopTime();
+    stopTime(intervalID.current);
     timerFormat(focus, focus, "Focus");
   };
 
