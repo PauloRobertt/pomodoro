@@ -16,31 +16,31 @@ export function useTimer(props: useTimerProps) {
   const [longBreakSeconds, setLongBreakSeconds] = useState(longBreak);
 
   const [totalTime, setTotalTime] = useState(0);
-  const [timeBreak, setTimeBreak] = useState(0);
+  const [activeTime, setActiveTime] = useState(0);
   const [completedCycle, setCompletedCycle] = useState(0);
 
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setseconds] = useState(0);
   const [timerStatus, setTimerStatus] = useState("");
-  const [mode, setMode] = useState("");
+  const [timerMode, setTimerMode] = useState("");
 
   const intervalID = useRef<number | undefined>(undefined);
-  const ciclosFeitos = useRef<number>(0);
+  const cycleCountRef = useRef<number>(0);
 
   useEffect(() => {
-    switch (mode) {
-      case "modeFocus":
+    switch (timerMode) {
+      case "timerModeFocus":
         setTotalTime(0);
         stopTime(intervalID.current);
         focusTime();
         break;
-      case "modeShort":
+      case "timerModeShort":
         setTotalTime(0);
         stopTime(intervalID.current);
         shortBreakTime();
         break;
-      case "modeLong":
+      case "timerModeLong":
         setTotalTime(0);
         stopTime(intervalID.current);
         longBreakTime();
@@ -49,14 +49,14 @@ export function useTimer(props: useTimerProps) {
       default:
         break;
     }
-  }, [mode]);
+  }, [timerMode]);
 
   const timerFormat = (
     valueSeconds: number,
     tempoBreak: number,
     timerStatus: string,
   ) => {
-    setTimeBreak(tempoBreak);
+    setActiveTime(tempoBreak);
     setTimerStatus(timerStatus);
 
     const hoursCalculadas = Math.floor(valueSeconds / 3600);
@@ -74,7 +74,7 @@ export function useTimer(props: useTimerProps) {
     var hoursCalculadas = Math.floor(focusSeconds / 3600);
     var minutesCalculados = Math.floor((focusSeconds % 3600) / 60);
     var secondsCalculados = focusSeconds % 60;
-    var teste = focusSeconds;
+    var secondsLeft = focusSeconds;
 
     intervalID.current = setInterval(() => {
       if (
@@ -99,36 +99,36 @@ export function useTimer(props: useTimerProps) {
 
       setTotalTime((prevtotalTime) => prevtotalTime + 1);
       secondsCalculados--;
-      teste--;
+      secondsLeft--;
 
       if (
         minutesCalculados <= 0 &&
         secondsCalculados <= 0 &&
-        ciclosFeitos.current < cycle
+        cycleCountRef.current < cycle
       ) {
         setFocusSeconds(focus);
-        ciclosFeitos.current = ciclosFeitos.current + 1;
+        cycleCountRef.current = cycleCountRef.current + 1;
         setCompletedCycle((prevCiclo) => prevCiclo + 1);
         setTotalTime(0);
         stopTime(intervalID.current);
-        setMode("modeShort");
+        setTimerMode("timerModeShort");
         return;
       }
 
       if (
         minutesCalculados <= 0 &&
         secondsCalculados <= 0 &&
-        ciclosFeitos.current === cycle
+        cycleCountRef.current === cycle
       ) {
-        ciclosFeitos.current = 0;
+        cycleCountRef.current = 0;
         setFocusSeconds(focus);
         setTotalTime(0);
         stopTime(intervalID.current);
-        setMode("modeLong");
+        setTimerMode("timerModeLong");
         return;
       }
 
-      setFocusSeconds(teste);
+      setFocusSeconds(secondsLeft);
       setHours(hoursCalculadas);
       setMinutes(minutesCalculados);
       setseconds(secondsCalculados);
@@ -141,7 +141,7 @@ export function useTimer(props: useTimerProps) {
     var hoursCalculadas = Math.floor(shortBreakSeconds / 3600);
     var minutesCalculados = Math.floor((shortBreakSeconds % 3600) / 60);
     var secondsCalculados = shortBreakSeconds % 60;
-    var teste = shortBreakSeconds;
+    var secondsLeft = shortBreakSeconds;
 
     intervalID.current = setInterval(() => {
       if (
@@ -166,15 +166,15 @@ export function useTimer(props: useTimerProps) {
 
       setTotalTime((prevtotalTime) => prevtotalTime + 1);
       secondsCalculados--;
-      teste--;
+      secondsLeft--;
 
       if (secondsCalculados <= 0 && minutesCalculados <= 0) {
-        teste = shortBreak;
+        secondsLeft = shortBreak;
         stopTime(intervalID.current);
-        setMode("modeFocus");
+        setTimerMode("timerModeFocus");
       }
 
-      setShortBreakSeconds(teste);
+      setShortBreakSeconds(secondsLeft);
       setHours(hoursCalculadas);
       setMinutes(minutesCalculados);
       setseconds(secondsCalculados);
@@ -187,7 +187,7 @@ export function useTimer(props: useTimerProps) {
     var hoursCalculadas = Math.floor(longBreakSeconds / 3600);
     var minutesCalculados = Math.floor((longBreakSeconds % 3600) / 60);
     var secondsCalculados = longBreakSeconds % 60;
-    var teste = longBreakSeconds;
+    var secondsLeft = longBreakSeconds;
 
     intervalID.current = setInterval(() => {
       if (
@@ -212,16 +212,16 @@ export function useTimer(props: useTimerProps) {
 
       setTotalTime((prevtotalTime) => prevtotalTime + 1);
       secondsCalculados--;
-      teste--;
+      secondsLeft--;
 
       if (secondsCalculados <= 0 && minutesCalculados <= 0) {
         setCompletedCycle(0);
-        teste = longBreak;
+        secondsLeft = longBreak;
         stopTime(intervalID.current);
-        setMode("modeFocus");
+        setTimerMode("timerModeFocus");
       }
 
-      setLongBreakSeconds(teste);
+      setLongBreakSeconds(secondsLeft);
       setHours(hoursCalculadas);
       setMinutes(minutesCalculados);
       setseconds(secondsCalculados);
@@ -230,7 +230,7 @@ export function useTimer(props: useTimerProps) {
 
   const startTime = () => {
     if (intervalID.current) return;
-    switch (timeBreak) {
+    switch (activeTime) {
       case focus:
         focusTime();
         break;
@@ -254,8 +254,8 @@ export function useTimer(props: useTimerProps) {
   };
 
   const resetTime = () => {
-    ciclosFeitos.current = 0;
-    setMode("");
+    cycleCountRef.current = 0;
+    setTimerMode("");
     setCompletedCycle(0);
     setTotalTime(0);
     setFocusSeconds(focus);
@@ -268,7 +268,7 @@ export function useTimer(props: useTimerProps) {
     timerFormat,
     stopTime,
     resetTime,
-    timeBreak,
+    activeTime,
     totalTime,
     completedCycle,
     timerStatus,
