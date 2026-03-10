@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import type { TimerProps } from "../../types/timer";
-import { Timer } from "../../class/Timer";
+import { useTimer } from "../../hooks/useTimer.ts";
+import type { useTimerProps } from "../../types/useTimer.ts";
 
 import Button from "../../components/button/button.tsx";
 import TimerDisplay from "../../components/timeDisplay/timerDisplay.tsx";
@@ -15,40 +15,34 @@ export default function Pomodoro({
   shortBreak,
   longBreak,
   cycle,
-}: TimerProps) {
+}: useTimerProps) {
   const [timeFocus, setTimeFocus] = useState(focus);
   const [timeShort, setTimeShort] = useState(shortBreak);
   const [timeLong, setTimeLong] = useState(longBreak);
   const [timeCycle, setTimeCycle] = useState(cycle);
-
-  const [tempoTotal, setTempoTotal] = useState(0);
-  const [timeBreak, setTimeBreak] = useState(focus);
-
-  const [ciclosConcluidos, setCiclosConcluidos] = useState(0);
-  const [statusTimer, setStatusTimer] = useState("");
   const [isUseTimer, setIsUseTimer] = useState(false);
-  const [horas, setHoras] = useState(0);
-  const [minutos, setMinutos] = useState(0);
-  const [segundos, setSegundos] = useState(0);
 
-  const timerRef = useRef<Timer | null>(null);
+  const {
+    startTime,
+    timerFormat,
+    stopTime,
+    resetTime,
+    activeTime,
+    totalTime,
+    completedCycle,
+    timerStatus,
+    hours,
+    minutes,
+    seconds,
+  } = useTimer({
+    focus: timeFocus,
+    shortBreak: timeShort,
+    longBreak: timeLong,
+    cycle: timeCycle,
+  });
 
   useEffect(() => {
-    timerRef.current = new Timer(
-      (timerBreak, tempoTotal, ciclosConcluidos, status, hours, min, sec) => {
-        setTimeBreak(timerBreak);
-        setTempoTotal(tempoTotal);
-        setCiclosConcluidos(ciclosConcluidos);
-        setStatusTimer(status);
-        setHoras(hours);
-        setMinutos(min);
-        setSegundos(sec);
-      },
-      timeFocus,
-      timeShort,
-      timeLong,
-      timeCycle,
-    );
+    timerFormat(timeFocus, timeFocus, "Focus");
   }, [timeFocus, timeShort, timeLong, timeCycle]);
 
   function saveConfig(
@@ -64,7 +58,7 @@ export default function Pomodoro({
     setTimeLong(inputLongValue);
     setTimeCycle(inputCycleValue);
     setIsUseTimer(false);
-    timerRef.current?.resetTimer();
+    resetTime();
   }
 
   return (
@@ -78,14 +72,14 @@ export default function Pomodoro({
       />
 
       <TimerDisplay
-        horas={horas}
-        minutos={minutos}
-        segundos={segundos}
-        statusTimer={statusTimer}
+        horas={hours}
+        minutos={minutes}
+        segundos={seconds}
+        statusTimer={timerStatus}
         timeCycle={timeCycle}
-        ciclosConcluidos={ciclosConcluidos}
-        tempoTotal={tempoTotal}
-        timeBreak={timeBreak}
+        ciclosConcluidos={completedCycle}
+        tempoTotal={totalTime}
+        timeBreak={activeTime}
       />
 
       <div className={styles.containerButtons}>
@@ -94,7 +88,7 @@ export default function Pomodoro({
             <Button
               action={() => {
                 setIsUseTimer(false);
-                timerRef.current?.stopTimer();
+                stopTime();
               }}
               styleButton={stylesButton.mainButton}
               text="Stop"
@@ -102,7 +96,7 @@ export default function Pomodoro({
             <Button
               action={() => {
                 setIsUseTimer(false);
-                timerRef.current?.resetTimer();
+                resetTime();
               }}
               styleButton={stylesButton.mainButton}
               text="Reset"
@@ -113,7 +107,7 @@ export default function Pomodoro({
             <Button
               action={() => {
                 setIsUseTimer(true);
-                timerRef.current?.startTime();
+                startTime();
               }}
               styleButton={stylesButton.mainButton}
               text="Start"
