@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useTimer } from "../../hooks/useTimer.ts";
 import type { useTimerProps } from "../../types/useTimer.ts";
