@@ -1,4 +1,4 @@
-export type useTimer = {
+export type useTimerProps = {
   focus: number;
   shortBreak: number;
   longBreak: number;
