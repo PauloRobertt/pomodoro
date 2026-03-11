@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 
 import type { useTimerProps } from "../types/useTimer";
+import type { TimerStatus } from "../types/timerStatus";
+import type { typeTimerMode } from "../types/timerMode";
 
 export function useTimer(props: useTimerProps) {
   const { focus, shortBreak, longBreak, cycle } = props;
@@ -22,8 +24,8 @@ export function useTimer(props: useTimerProps) {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setseconds] = useState(0);
-  const [timerStatus, setTimerStatus] = useState("");
-  const [timerMode, setTimerMode] = useState("");
+  const [timerStatus, setTimerStatus] = useState<TimerStatus | null>(null);
+  const [timerMode, setTimerMode] = useState<typeTimerMode | null>(null);
 
   const intervalID = useRef<number | undefined>(undefined);
   const cycleCountRef = useRef<number>(0);
@@ -54,7 +56,7 @@ export function useTimer(props: useTimerProps) {
   const timerFormat = (
     valueSeconds: number,
     tempoBreak: number,
-    timerStatus: string,
+    timerStatus: TimerStatus,
   ) => {
     setActiveTime(tempoBreak);
     setTimerStatus(timerStatus);
@@ -230,16 +232,16 @@ export function useTimer(props: useTimerProps) {
 
   const startTime = () => {
     if (intervalID.current) return;
-    switch (activeTime) {
-      case focus:
+    switch (timerStatus) {
+      case "Focus":
         focusTime();
         break;
 
-      case shortBreak:
+      case "ShortBreak":
         shortBreakTime();
         break;
 
-      case longBreak:
+      case "LongBreak":
         longBreakTime();
         break;
 
@@ -255,7 +257,7 @@ export function useTimer(props: useTimerProps) {
 
   const resetTime = () => {
     cycleCountRef.current = 0;
-    setTimerMode("");
+    setTimerMode(null);
     setCompletedCycle(0);
     setTotalTime(0);
     setFocusSeconds(focus);
