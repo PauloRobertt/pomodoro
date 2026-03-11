@@ -4,6 +4,12 @@ import type { useTimerProps } from "../types/useTimer";
 import type { TimerStatus } from "../types/timerStatus";
 import type { typeTimerMode } from "../types/timerMode";
 
+import noticationStart from "../sounds/noticationStart.mp3";
+import noticationStop from "../sounds/noticationStop.mp3";
+
+const AudioStart = new Audio(noticationStart);
+const AudioStop = new Audio(noticationStop);
+
 export function useTimer(props: useTimerProps) {
   const { focus, shortBreak, longBreak, cycle } = props;
 
@@ -33,16 +39,19 @@ export function useTimer(props: useTimerProps) {
   useEffect(() => {
     switch (timerMode) {
       case "timerModeFocus":
+        AudioStart.play();
         setTotalTime(0);
         stopTime(intervalID.current);
         focusTime();
         break;
       case "timerModeShort":
+        AudioStop.play();
         setTotalTime(0);
         stopTime(intervalID.current);
         shortBreakTime();
         break;
       case "timerModeLong":
+        AudioStop.play();
         setTotalTime(0);
         stopTime(intervalID.current);
         longBreakTime();
@@ -234,6 +243,7 @@ export function useTimer(props: useTimerProps) {
     if (intervalID.current) return;
     switch (timerStatus) {
       case "Focus":
+        AudioStart.play();
         focusTime();
         break;
 
