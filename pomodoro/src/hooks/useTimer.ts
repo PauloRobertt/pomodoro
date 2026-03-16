@@ -271,6 +271,8 @@ export function useTimer(props: useTimerProps) {
     setCompletedCycle(0);
     setTotalTime(0);
     setFocusSeconds(focus);
+    setShortBreakSeconds(shortBreak);
+    setLongBreakSeconds(longBreak);
     stopTime(intervalID.current);
     timerFormat(focus, focus, "Focus");
   };
