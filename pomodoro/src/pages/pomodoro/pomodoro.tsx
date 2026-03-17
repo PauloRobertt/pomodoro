@@ -16,11 +16,31 @@ export default function Pomodoro({
   longBreak,
   cycle,
 }: useTimerProps) {
-  const [timeFocus, setTimeFocus] = useState(focus);
-  const [timeShort, setTimeShort] = useState(shortBreak);
-  const [timeLong, setTimeLong] = useState(longBreak);
-  const [timeCycle, setTimeCycle] = useState(cycle);
+  const [timeFocus, setTimeFocus] = useState(
+    Number(localStorage.getItem("timeFocus")) || focus,
+  );
+  const [timeShort, setTimeShort] = useState(
+    Number(localStorage.getItem("timeShort")) || shortBreak,
+  );
+  const [timeLong, setTimeLong] = useState(
+    Number(localStorage.getItem("timeLong")) || longBreak,
+  );
+  const [timeCycle, setTimeCycle] = useState(
+    Number(localStorage.getItem("timeCycle")) || cycle,
+  );
   const [isUseTimer, setIsUseTimer] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem("timeFocus"))
+      localStorage.setItem("timeFocus", String(timeFocus));
+    if (!localStorage.getItem("timeShort"))
+      localStorage.setItem("timeShort", String(timeShort));
+    if (!localStorage.getItem("timeLong"))
+      localStorage.setItem("timeLong", String(timeLong));
+    if (!localStorage.getItem("timeCycle"))
+      localStorage.setItem("timeCycle", String(timeCycle));
+    timerFormat(timeFocus, timeFocus, "Focus");
+  }, []);
 
   const {
     startTime,
@@ -43,7 +63,7 @@ export default function Pomodoro({
 
   useEffect(() => {
     timerFormat(timeFocus, timeFocus, "Focus");
-  }, [timeFocus, timeShort, timeLong, timeCycle]);
+  }, [timeFocus]);
 
   function saveConfig(
     e: React.FormEvent,
@@ -53,10 +73,22 @@ export default function Pomodoro({
     inputCycleValue: number,
   ): void {
     e.preventDefault();
-    setTimeFocus(inputFocusValue);
-    setTimeShort(inputShortValue);
-    setTimeLong(inputLongValue);
-    setTimeCycle(inputCycleValue);
+    if (timeFocus !== inputFocusValue) {
+      localStorage.setItem("timeFocus", String(inputFocusValue));
+      setTimeFocus(inputFocusValue);
+    }
+    if (timeShort !== inputShortValue) {
+      localStorage.setItem("timeShort", String(inputShortValue));
+      setTimeShort(inputShortValue);
+    }
+    if (timeLong !== inputLongValue) {
+      localStorage.setItem("timeLong", String(inputLongValue));
+      setTimeLong(inputLongValue);
+    }
+    if (timeCycle !== inputCycleValue) {
+      localStorage.setItem("timeCycle", String(inputCycleValue));
+      setTimeCycle(inputCycleValue);
+    }
     setIsUseTimer(false);
     resetTime();
   }
