@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { renderHook, act, type RenderHookResult } from "@testing-library/react";
 import { describe, test, expect, vi, afterEach, beforeEach } from "vitest";
 import { useTimer } from "./useTimer.ts";
