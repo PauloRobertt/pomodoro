@@ -1,4 +1,4 @@
-import { renderHook, act, type RenderHookResult } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import { describe, test, expect, vi, afterEach, beforeEach } from "vitest";
 import { useTimer } from "./useTimer.ts";
 
