@@ -63,6 +63,7 @@ export default function OptionMenu(props: optionMenu) {
         />
         <div className={styles.time}>
           <input
+            data-testId={`input-${props.id}`}
             type={props.type}
             value={props.id !== "cycle" ? defaultValue / 60 : defaultValue}
             onChange={handleOnChange}

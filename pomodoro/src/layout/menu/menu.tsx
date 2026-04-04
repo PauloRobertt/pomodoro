@@ -63,6 +63,7 @@ export default function Menu({
         />
       </figure>
       <div
+        data-testId="containerConfigMenu"
         className={
           isShowMenu ? styles.containerConfigOpen : styles.containerConfig
         }
