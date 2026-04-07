@@ -25,25 +25,25 @@ export default function TimerDisplay(props: TimerDisplayProps) {
       <svg width="200" height="200" className={styles.circleContent}>
         <circle
           className={styles.circle}
-          r="170"
+          r="180"
           cx="200"
           cy="200"
           fill="white"
           stroke="var(--secundaryColor)"
-          strokeWidth="3px"
-          strokeDasharray={1069}
+          strokeWidth="8px"
         />
 
         <circle
           className={styles.circle}
           id="circle"
-          r="170"
+          r="180"
           cx="200"
           cy="200"
-          fill="white"
+          fillOpacity={0}
           stroke="var(--primaryColor)"
-          strokeWidth="6px"
-          strokeDasharray={1069}
+          strokeWidth="8px"
+          strokeLinecap="round"
+          strokeDasharray={1130}
         />
       </svg>
       <div className={styles.containerTimer}>
@@ -56,7 +56,6 @@ export default function TimerDisplay(props: TimerDisplayProps) {
           {String(props.minutos).padStart(2, "0")}:
           {String(props.segundos).padStart(2, "0")}
         </h1>
-        <small>{props.statusTimer}</small>
         <small className={styles.containerCiclos}>
           {Array.from({ length: props.ciclosConcluidos }, (_, index) => (
             <img
