@@ -13,12 +13,16 @@
 
 .mainButton {
   font-size: 20px;
-  width: 180px;
+  width: 200px;
   height: 50px;
+  scale: 12em;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .mainButton:hover {
   background-color: var(--hoverColor);
+  scale: 1em;
 }
 
 .menuButton {
