@@ -8,8 +8,8 @@ import stylesButton from "../../components/button/button.module.css";
 //types
 import type { MenuProps } from "../../types/menu";
 
-//Assets
-import { OrganizarImgs } from "../../assets/OrganizarImgs";
+//icons
+import { BsFillGearFill } from "react-icons/bs";
 
 //Componentes
 import Button from "../../components/button/button";
@@ -53,15 +53,14 @@ export default function Menu({
 
   return (
     <div className={styles.layoutMenu}>
-      <figure className={styles.imgConfig}>
-        <img
+      <div className={styles.containerImgConfig}>
+        <BsFillGearFill
           onClick={() => {
             setIsShowMenu((prev) => !prev);
           }}
-          src={OrganizarImgs.config}
-          alt="Icone configuração"
+          className={styles.imgConfig}
         />
-      </figure>
+      </div>
       <div
         data-testId="containerConfigMenu"
         className={
