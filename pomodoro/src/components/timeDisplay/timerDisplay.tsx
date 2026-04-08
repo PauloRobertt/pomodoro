@@ -30,7 +30,7 @@ export default function TimerDisplay(props: TimerDisplayProps) {
           cy="200"
           fill="white"
           stroke="var(--secundaryColor)"
-          strokeWidth="8px"
+          strokeWidth="15px"
         />
 
         <circle
@@ -41,7 +41,7 @@ export default function TimerDisplay(props: TimerDisplayProps) {
           cy="200"
           fillOpacity={0}
           stroke="var(--primaryColor)"
-          strokeWidth="8px"
+          strokeWidth="15px"
           strokeLinecap="round"
           strokeDasharray={1130}
         />
