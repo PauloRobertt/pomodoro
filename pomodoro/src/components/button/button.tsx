@@ -4,6 +4,7 @@ import type { ButtonProps } from "../../types/button";
 export default function Button({
   action,
   text,
+  icon,
   styleButton,
   onMouseUp,
   onMouseDown,
@@ -15,6 +16,7 @@ export default function Button({
       className={`${styles.buttonDefault} ${styleButton}`}
       onClick={action}
     >
+      {icon ? icon : ""}
       {text}
     </button>
   );

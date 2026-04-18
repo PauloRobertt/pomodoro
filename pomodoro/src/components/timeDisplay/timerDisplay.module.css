@@ -2,9 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50%;
+  width: 100%;
   position: relative;
-  padding: 0.5em;
 }
 
 .circleContent {
@@ -13,12 +12,8 @@
   height: 400px;
 }
 
-.circleBackground {
-}
-
-.circle {
+.circleContent .circle {
   transition: all 1s linear;
-  border: 1px solid blue;
 }
 
 .circleWrapper h1 {

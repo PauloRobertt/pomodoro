@@ -10,6 +10,16 @@ import Menu from "../../layout/menu/menu.tsx";
 import styles from "./pomodoro.module.css";
 import stylesButton from "../../components/button/button.module.css";
 
+import { OrganizarImgs } from "../../assets/OrganizarImgs.ts";
+
+//icons
+import { FaPlay } from "react-icons/fa";
+import { FaPause } from "react-icons/fa";
+import { LuTimerReset } from "react-icons/lu";
+import { FaRocket } from "react-icons/fa";
+import { FaRegHourglass } from "react-icons/fa6";
+import { RiSofaLine } from "react-icons/ri";
+
 export default function Pomodoro({
   focus,
   shortBreak,
@@ -95,57 +105,108 @@ export default function Pomodoro({
 
   return (
     <div className={styles.containerPomodoro}>
-      <Menu
-        defaultValueFocus={timeFocus}
-        defaultValueShortBreak={timeShort}
-        defaultValueLongBreak={timeLong}
-        defaultValueCycle={timeCycle}
-        functionSaveConfig={saveConfig}
-      />
+      <header className={styles.header}>
+        <figure className={styles.figureLogo}>
+          <img
+            src={OrganizarImgs.pomodoroDefault}
+            alt="logo projeto pomodoro"
+          />
+        </figure>
+        <p>Pomodoro Timer</p>
+        <Menu
+          defaultValueFocus={timeFocus}
+          defaultValueShortBreak={timeShort}
+          defaultValueLongBreak={timeLong}
+          defaultValueCycle={timeCycle}
+          functionSaveConfig={saveConfig}
+        />
+      </header>
 
-      <TimerDisplay
-        horas={hours}
-        minutos={minutes}
-        segundos={seconds}
-        statusTimer={timerStatus}
-        timeCycle={timeCycle}
-        ciclosConcluidos={completedCycle}
-        tempoTotal={totalTime}
-        timeBreak={activeTime}
-      />
+      <main>
+        <TimerDisplay
+          horas={hours}
+          minutos={minutes}
+          segundos={seconds}
+          timeCycle={timeCycle}
+          ciclosConcluidos={completedCycle}
+          tempoTotal={totalTime}
+          timeBreak={activeTime}
+        />
 
-      <div className={styles.containerButtons}>
-        {isUseTimer ? (
-          <>
-            <Button
-              action={() => {
-                setIsUseTimer(false);
-                stopTime();
-              }}
-              styleButton={stylesButton.mainButton}
-              text="Stop"
-            />
-            <Button
-              action={() => {
-                setIsUseTimer(false);
-                resetTime();
-              }}
-              styleButton={stylesButton.mainButton}
-              text="Reset"
-            />
-          </>
-        ) : (
-          <>
-            <Button
-              action={() => {
-                setIsUseTimer(true);
-                startTime();
-              }}
-              styleButton={stylesButton.mainButton}
-              text="Start"
-            />
-          </>
-        )}
+        <div className={styles.containerButtons}>
+          {isUseTimer ? (
+            <>
+              <Button
+                action={() => {
+                  setIsUseTimer(false);
+                  stopTime();
+                }}
+                styleButton={stylesButton.mainButton}
+                text="Stop"
+                icon={<FaPause color="white" size={20} />}
+              />
+              <Button
+                action={() => {
+                  setIsUseTimer(false);
+                  resetTime();
+                }}
+                styleButton={stylesButton.mainButton}
+                text="Reset"
+                icon={<LuTimerReset color="white" size={20} />}
+              />
+            </>
+          ) : (
+            <>
+              <Button
+                action={() => {
+                  setIsUseTimer(true);
+                  startTime();
+                }}
+                styleButton={stylesButton.mainButton}
+                text="Start"
+                icon={<FaPlay color="white" size={20} />}
+              />
+            </>
+          )}
+        </div>
+      </main>
+
+      <div className={styles.containerStatusTimer}>
+        <div
+          className={`${styles.status} ${timerStatus == "Focus" ? styles.statusActive : ""}`}
+        >
+          <div className={styles.contentStatus}>
+            <h3>Focus</h3>
+            <p>{timeFocus / 60} min</p>
+          </div>
+          <div className={styles.statusimg}>
+            <FaRocket />
+          </div>
+        </div>
+
+        <div
+          className={`${styles.status} ${timerStatus == "ShortBreak" ? styles.statusActive : ""}`}
+        >
+          <div className={styles.contentStatus}>
+            <h3>Short</h3>
+            <p>{timeShort / 60} min</p>
+          </div>
+          <div className={styles.statusimg}>
+            <FaRegHourglass />
+          </div>
+        </div>
+
+        <div
+          className={`${styles.status} ${timerStatus == "LongBreak" ? styles.statusActive : ""}`}
+        >
+          <div className={styles.contentStatus}>
+            <h3>Long</h3>
+            <p>{timeLong / 60} min</p>
+          </div>
+          <div className={styles.statusimg}>
+            <RiSofaLine />
+          </div>
+        </div>
       </div>
     </div>
   );
