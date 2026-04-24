@@ -14,15 +14,11 @@ export function useNotification() {
   };
 
   const sendNotification = (textBody: string) => {
-    Notification.requestPermission().then((permission) => {
-      if (permission === "granted") {
-        new Notification("Notificação Pomodoro", {
-          body: textBody,
-        });
-      } else if (permission === "denied") {
-        throw new Error("Permissão de notificação");
-      }
-    });
+    if (Notification.permission === "granted") {
+      new Notification("Notificação Pomodoro", {
+        body: textBody,
+      });
+    }
   };
 
   return { sendNotification, askNotification };
