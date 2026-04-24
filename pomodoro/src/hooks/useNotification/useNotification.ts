@@ -1,15 +1,22 @@
-import { OrganizarImgs } from "../../assets/OrganizarImgs";
-
 export function useNotification() {
-  if ("Notification" in window) {
-    Notification.requestPermission();
-  }
+  const askNotification = () => {
+    if (!("Notification" in window)) {
+      alert("This browser does not support desktop notification");
+    }
+
+    if (Notification.permission === "default") {
+      alert(
+        "The popup notification is blocked by the browser. Please allow it by clicking the bell icon on the URL bar.",
+      );
+      Notification.requestPermission();
+    }
+    console.log(Notification.permission);
+  };
 
   const sendNotification = (textBody: string) => {
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
         new Notification("Notificação Pomodoro", {
-          icon: OrganizarImgs.pomodoroDefault,
           body: textBody,
         });
       } else if (permission === "denied") {
@@ -18,5 +25,5 @@ export function useNotification() {
     });
   };
 
-  return { sendNotification };
+  return { sendNotification, askNotification };
 }
