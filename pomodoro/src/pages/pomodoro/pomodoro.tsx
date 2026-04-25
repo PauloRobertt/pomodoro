@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { useTimer } from "../../hooks/useTimer.ts";
+import { useTimer } from "../../hooks/useTimer/useTimer.ts";
+import { useNotification } from "~/hooks/useNotification/useNotification.ts";
 import type { useTimerProps } from "../../types/useTimer.ts";
 
 import Button from "../../components/button/button.tsx";
@@ -39,18 +40,7 @@ export default function Pomodoro({
     Number(localStorage.getItem("timeCycle")) || cycle,
   );
   const [isUseTimer, setIsUseTimer] = useState(false);
-
-  useEffect(() => {
-    if (!localStorage.getItem("timeFocus"))
-      localStorage.setItem("timeFocus", String(timeFocus));
-    if (!localStorage.getItem("timeShort"))
-      localStorage.setItem("timeShort", String(timeShort));
-    if (!localStorage.getItem("timeLong"))
-      localStorage.setItem("timeLong", String(timeLong));
-    if (!localStorage.getItem("timeCycle"))
-      localStorage.setItem("timeCycle", String(timeCycle));
-    timerFormat(timeFocus, timeFocus, "Focus");
-  }, []);
+  const { sendNotification, askNotification } = useNotification();
 
   const {
     startTime,
@@ -64,6 +54,7 @@ export default function Pomodoro({
     hours,
     minutes,
     seconds,
+    isFinished,
   } = useTimer({
     focus: timeFocus,
     shortBreak: timeShort,
@@ -72,8 +63,26 @@ export default function Pomodoro({
   });
 
   useEffect(() => {
+    if (!localStorage.getItem("timeFocus"))
+      localStorage.setItem("timeFocus", String(timeFocus));
+    if (!localStorage.getItem("timeShort"))
+      localStorage.setItem("timeShort", String(timeShort));
+    if (!localStorage.getItem("timeLong"))
+      localStorage.setItem("timeLong", String(timeLong));
+    if (!localStorage.getItem("timeCycle"))
+      localStorage.setItem("timeCycle", String(timeCycle));
+    timerFormat(timeFocus, timeFocus, "Focus");
+  }, []);
+
+  useEffect(() => {
     timerFormat(timeFocus, timeFocus, "Focus");
   }, [timeFocus]);
+
+  useEffect(() => {
+    if (isFinished) {
+      sendNotification("Tempo finalizado!");
+    }
+  }, [isFinished]);
 
   function saveConfig(
     e: React.FormEvent,
@@ -159,6 +168,7 @@ export default function Pomodoro({
             <>
               <Button
                 action={() => {
+                  askNotification();
                   setIsUseTimer(true);
                   startTime();
                 }}
