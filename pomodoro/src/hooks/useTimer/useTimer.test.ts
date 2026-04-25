@@ -1,6 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, test, expect, vi, afterEach, beforeEach } from "vitest";
-import { useTimer } from "./useTimer.ts";
+import { useTimer } from "../useTimer/useTimer.ts";
 
 // Initial Values
 const focusDefault = 1800;

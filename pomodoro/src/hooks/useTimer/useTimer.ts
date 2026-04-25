@@ -1,23 +1,17 @@
 import { useEffect, useState, useRef } from "react";
 
-import type { useTimerProps } from "../types/useTimer";
-import type { TimerStatus } from "../types/timerStatus";
-import type { typeTimerMode } from "../types/timerMode";
+import type { useTimerProps } from "../../types/useTimer";
+import type { TimerStatus } from "../../types/timerStatus";
+import type { typeTimerMode } from "../../types/timerMode";
 
-import noticationStart from "../sounds/noticationStart.mp3";
-import noticationStop from "../sounds/noticationStop.mp3";
+import noticationStart from "../../sounds/noticationStart.mp3";
+import noticationStop from "../../sounds/noticationStop.mp3";
 
 const AudioStart = new Audio(noticationStart);
 const AudioStop = new Audio(noticationStop);
 
 export function useTimer(props: useTimerProps) {
   const { focus, shortBreak, longBreak, cycle } = props;
-
-  useEffect(() => {
-    setFocusSeconds(focus);
-    setShortBreakSeconds(shortBreak);
-    setLongBreakSeconds(longBreak);
-  }, [focus, shortBreak, longBreak]);
 
   const [focusSeconds, setFocusSeconds] = useState(focus);
   const [shortBreakSeconds, setShortBreakSeconds] = useState(shortBreak);
@@ -33,24 +27,35 @@ export function useTimer(props: useTimerProps) {
   const [timerStatus, setTimerStatus] = useState<TimerStatus | null>(null);
   const [timerMode, setTimerMode] = useState<typeTimerMode | null>(null);
 
+  const [isFinished, setIsFinished] = useState(false);
+
   const intervalID = useRef<number | undefined>(undefined);
   const cycleCountRef = useRef<number>(0);
 
   useEffect(() => {
+    setFocusSeconds(focus);
+    setShortBreakSeconds(shortBreak);
+    setLongBreakSeconds(longBreak);
+  }, [focus, shortBreak, longBreak]);
+
+  useEffect(() => {
     switch (timerMode) {
       case "timerModeFocus":
+        setIsFinished(false);
         AudioStart.play();
         setTotalTime(0);
         stopTime(intervalID.current);
         focusTime();
         break;
       case "timerModeShort":
+        setIsFinished(false);
         AudioStop.play();
         setTotalTime(0);
         stopTime(intervalID.current);
         shortBreakTime();
         break;
       case "timerModeLong":
+        setIsFinished(false);
         AudioStop.play();
         setTotalTime(0);
         stopTime(intervalID.current);
@@ -117,6 +122,7 @@ export function useTimer(props: useTimerProps) {
         secondsCalculados <= 0 &&
         cycleCountRef.current < cycle
       ) {
+        setIsFinished(true);
         setFocusSeconds(focus);
         cycleCountRef.current = cycleCountRef.current + 1;
         setCompletedCycle((prevCiclo) => prevCiclo + 1);
@@ -131,6 +137,7 @@ export function useTimer(props: useTimerProps) {
         secondsCalculados <= 0 &&
         cycleCountRef.current === cycle
       ) {
+        setIsFinished(true);
         cycleCountRef.current = 0;
         setFocusSeconds(focus);
         setTotalTime(0);
@@ -180,6 +187,7 @@ export function useTimer(props: useTimerProps) {
       secondsLeft--;
 
       if (secondsCalculados <= 0 && minutesCalculados <= 0) {
+        setIsFinished(true);
         secondsLeft = shortBreak;
         stopTime(intervalID.current);
         setTimerMode("timerModeFocus");
@@ -226,6 +234,7 @@ export function useTimer(props: useTimerProps) {
       secondsLeft--;
 
       if (secondsCalculados <= 0 && minutesCalculados <= 0) {
+        setIsFinished(true);
         setCompletedCycle(0);
         secondsLeft = longBreak;
         stopTime(intervalID.current);
@@ -289,5 +298,6 @@ export function useTimer(props: useTimerProps) {
     hours,
     minutes,
     seconds,
+    isFinished,
   };
 }
