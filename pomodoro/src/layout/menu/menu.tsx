@@ -3,17 +3,17 @@ import { useState } from "react";
 
 //Styles
 import styles from "./menu.module.css";
-import stylesButton from "../../components/button/button.module.css";
+import stylesButton from "~/components/button/button.module.css";
 
 //types
-import type { MenuProps } from "../../types/menu";
+import type { MenuProps } from "~/types/menu";
 
 //icons
 import { BsFillGearFill } from "react-icons/bs";
 
 //Componentes
-import Button from "../../components/button/button";
-import OptionMenu from "../../components/optionMenu/optionMenu";
+import Button from "~/components/button/button";
+import OptionMenu from "~/components/optionMenu/optionMenu";
 
 export default function Menu({
   defaultValueFocus,

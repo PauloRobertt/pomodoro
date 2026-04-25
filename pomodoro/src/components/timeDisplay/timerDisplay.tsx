@@ -1,6 +1,6 @@
 import styles from "./timerDisplay.module.css";
-import { OrganizarImgs } from "../../assets/OrganizarImgs";
-import type { TimerDisplayProps } from "../../types/timerDisplay";
+import { OrganizarImgs } from "~/assets/OrganizarImgs";
+import type { TimerDisplayProps } from "~/types/timerDisplay";
 import { useEffect } from "react";
 
 export default function TimerDisplay(props: TimerDisplayProps) {

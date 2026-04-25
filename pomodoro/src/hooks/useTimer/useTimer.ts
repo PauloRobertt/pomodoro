@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 
-import type { useTimerProps } from "../../types/useTimer";
-import type { TimerStatus } from "../../types/timerStatus";
-import type { typeTimerMode } from "../../types/timerMode";
+import type { useTimerProps } from "~/types/useTimer";
+import type { TimerStatus } from "~/types/timerStatus";
+import type { typeTimerMode } from "~/types/timerMode";
 
-import noticationStart from "../../sounds/noticationStart.mp3";
-import noticationStop from "../../sounds/noticationStop.mp3";
+import noticationStart from "~/sounds/noticationStart.mp3";
+import noticationStop from "~/sounds/noticationStop.mp3";
 
 const AudioStart = new Audio(noticationStart);
 const AudioStop = new Audio(noticationStop);

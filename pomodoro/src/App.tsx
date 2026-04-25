@@ -1,7 +1,7 @@
-import "./App.css";
-import "./index.css";
+import "~/App.css";
+import "~/index.css";
 
-import Pomodoro from "./pages/pomodoro/pomodoro.tsx";
+import Pomodoro from "~/pages/pomodoro/pomodoro.tsx";
 
 function App() {
   return (

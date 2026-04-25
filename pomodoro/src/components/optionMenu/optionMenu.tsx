@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 
 import styles from "./optionMenu.module.css";
-import stylesButton from "../../components/button/button.module.css";
+import stylesButton from "~/components/button/button.module.css";
 
-import type { optionMenu } from "../../types/optionMenu";
+import type { optionMenu } from "~/types/optionMenu";
 
-import Button from "../button/button";
+import Button from "~/components/button/button.tsx";
 
 export default function OptionMenu(props: optionMenu) {
   const [defaultValue, setDefaultValue] = useState(props.value);

@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
-import { useTimer } from "../../hooks/useTimer/useTimer.ts";
+import { useTimer } from "~/hooks/useTimer/useTimer.ts";
 import { useNotification } from "~/hooks/useNotification/useNotification.ts";
-import type { useTimerProps } from "../../types/useTimer.ts";
+import type { useTimerProps } from "~/types/useTimer.ts";
 
-import Button from "../../components/button/button.tsx";
-import TimerDisplay from "../../components/timeDisplay/timerDisplay.tsx";
-import Menu from "../../layout/menu/menu.tsx";
+import Button from "~/components/button/button.tsx";
+import TimerDisplay from "~/components/timeDisplay/timerDisplay.tsx";
+import Menu from "~/layout/menu/menu.tsx";
 
 import styles from "./pomodoro.module.css";
-import stylesButton from "../../components/button/button.module.css";
+import stylesButton from "~/components/button/button.module.css";
 
-import { OrganizarImgs } from "../../assets/OrganizarImgs.ts";
+import { OrganizarImgs } from "~/assets/OrganizarImgs.ts";
 
 //icons
 import { FaPlay } from "react-icons/fa";

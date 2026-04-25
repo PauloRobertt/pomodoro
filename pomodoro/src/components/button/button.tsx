@@ -1,5 +1,5 @@
 import styles from "./button.module.css";
-import type { ButtonProps } from "../../types/button";
+import type { ButtonProps } from "~/types/button";
 
 export default function Button({
   action,
