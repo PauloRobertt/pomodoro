@@ -188,6 +188,7 @@ export function useTimer(props: useTimerProps) {
 
       if (secondsCalculados <= 0 && minutesCalculados <= 0) {
         setIsFinished(true);
+        secondsLeft = shortBreak;
         stopTime(intervalID.current);
         setTimerMode("timerModeFocus");
       }
