@@ -3,12 +3,10 @@ import { useEffect, useState, useRef } from "react";
 import type { useTimerProps } from "~/types/useTimer";
 import type { TimerStatus } from "~/types/timerStatus";
 import type { typeTimerMode } from "~/types/timerMode";
-
-import noticationStart from "~/sounds/noticationStart.mp3";
-import noticationStop from "~/sounds/noticationStop.mp3";
-
-const AudioStart = new Audio(noticationStart);
-const AudioStop = new Audio(noticationStop);
+import type { TimerConfig } from "~/types/timerConfig";
+import type { TimerMap } from "~/types/timerMap";
+import type { TimerCondition } from "~/types/timerCondition";
+import type { EventTimer } from "~/types/eventTimer";
 
 export function useTimer(props: useTimerProps) {
   const { focus, shortBreak, longBreak, cycle } = props;
@@ -27,241 +25,221 @@ export function useTimer(props: useTimerProps) {
   const [timerStatus, setTimerStatus] = useState<TimerStatus | null>(null);
   const [timerMode, setTimerMode] = useState<typeTimerMode | null>(null);
 
-  const [isFinished, setIsFinished] = useState(false);
+  const [event, setEvent] = useState<EventTimer>();
 
   const intervalID = useRef<number | undefined>(undefined);
   const cycleCountRef = useRef<number>(0);
 
   useEffect(() => {
-    setFocusSeconds(focus);
-    setShortBreakSeconds(shortBreak);
-    setLongBreakSeconds(longBreak);
-  }, [focus, shortBreak, longBreak]);
-
-  useEffect(() => {
-    switch (timerMode) {
-      case "timerModeFocus":
-        setIsFinished(false);
-        AudioStart.play();
-        setTotalTime(0);
-        stopTime(intervalID.current);
-        focusTime();
-        break;
-      case "timerModeShort":
-        setIsFinished(false);
-        AudioStop.play();
-        setTotalTime(0);
-        stopTime(intervalID.current);
-        shortBreakTime();
-        break;
-      case "timerModeLong":
-        setIsFinished(false);
-        AudioStop.play();
-        setTotalTime(0);
-        stopTime(intervalID.current);
-        longBreakTime();
-        break;
-
-      default:
-        break;
+    setTotalTime(0);
+    stopTime(intervalID.current);
+    if (timerMode != null) {
+      const config = timerMap[timerMode];
+      if (config) {
+        timer({
+          timerSeconds: config.timerSeconds,
+          timeBreak: config.timeBreak,
+          timerStatus: config.timerStatus,
+          handler: config.handler,
+        });
+      }
     }
   }, [timerMode]);
 
+  const timeCalculation = (timerSeconds: number) => {
+    const hoursCalculated = Math.floor(timerSeconds / 3600);
+    const minutesCalculated = Math.floor((timerSeconds % 3600) / 60);
+    const secondsCalculated = timerSeconds % 60;
+
+    return { hoursCalculated, minutesCalculated, secondsCalculated };
+  };
+
   const timerFormat = (
     valueSeconds: number,
-    tempoBreak: number,
+    timeBreak: number,
     timerStatus: TimerStatus,
   ) => {
-    setActiveTime(tempoBreak);
+    setActiveTime(timeBreak);
     setTimerStatus(timerStatus);
 
-    const hoursCalculadas = Math.floor(valueSeconds / 3600);
-    const minutesCalculados = Math.floor((valueSeconds % 3600) / 60);
-    const secondsCalculados = valueSeconds % 60;
+    const { hoursCalculated, minutesCalculated, secondsCalculated } =
+      timeCalculation(valueSeconds);
 
-    setHours(hoursCalculadas);
-    setMinutes(minutesCalculados);
-    setseconds(secondsCalculados);
+    setHours(hoursCalculated);
+    setMinutes(minutesCalculated);
+    setseconds(secondsCalculated);
   };
 
-  const focusTime = () => {
-    timerFormat(focusSeconds, focus, "Focus");
+  const timer = ({
+    timerSeconds,
+    timeBreak,
+    timerStatus,
+    handler,
+  }: TimerConfig) => {
+    timerFormat(timerSeconds, timeBreak, timerStatus);
 
-    var hoursCalculadas = Math.floor(focusSeconds / 3600);
-    var minutesCalculados = Math.floor((focusSeconds % 3600) / 60);
-    var secondsCalculados = focusSeconds % 60;
-    var secondsLeft = focusSeconds;
+    let { hoursCalculated, minutesCalculated, secondsCalculated } =
+      timeCalculation(timerSeconds);
+    let secondsLeft = timerSeconds;
 
     intervalID.current = setInterval(() => {
       if (
-        !(hoursCalculadas > 0) &&
-        !(minutesCalculados > 0) &&
-        !(secondsCalculados > 0)
+        !(hoursCalculated > 0) &&
+        !(minutesCalculated > 0) &&
+        !(secondsCalculated > 0)
       ) {
         stopTime(intervalID.current);
         return;
       }
 
-      if (secondsCalculados <= 0) {
-        secondsCalculados = 60;
-        minutesCalculados--;
+      if (secondsCalculated <= 0) {
+        secondsCalculated = 60;
+        minutesCalculated--;
       }
 
-      if (minutesCalculados <= 0 && hoursCalculadas > 0) {
-        minutesCalculados = 59;
-        secondsCalculados = 60;
-        hoursCalculadas--;
+      if (minutesCalculated <= 0 && hoursCalculated > 0) {
+        minutesCalculated = 59;
+        secondsCalculated = 60;
+        hoursCalculated--;
       }
 
       setTotalTime((prevtotalTime) => prevtotalTime + 1);
-      secondsCalculados--;
+      secondsCalculated--;
       secondsLeft--;
 
-      if (
-        minutesCalculados <= 0 &&
-        secondsCalculados <= 0 &&
-        cycleCountRef.current < cycle
-      ) {
-        setIsFinished(true);
-        setFocusSeconds(focus);
-        cycleCountRef.current = cycleCountRef.current + 1;
-        setCompletedCycle((prevCiclo) => prevCiclo + 1);
-        setTotalTime(0);
-        stopTime(intervalID.current);
-        setTimerMode("timerModeShort");
-        return;
-      }
+      handler({ minutesCalculated, secondsCalculated, secondsLeft });
 
-      if (
-        minutesCalculados <= 0 &&
-        secondsCalculados <= 0 &&
-        cycleCountRef.current === cycle
-      ) {
-        setIsFinished(true);
-        cycleCountRef.current = 0;
-        setFocusSeconds(focus);
-        setTotalTime(0);
-        stopTime(intervalID.current);
-        setTimerMode("timerModeLong");
-        return;
-      }
-
-      setFocusSeconds(secondsLeft);
-      setHours(hoursCalculadas);
-      setMinutes(minutesCalculados);
-      setseconds(secondsCalculados);
+      setHours(hoursCalculated);
+      setMinutes(minutesCalculated);
+      setseconds(secondsCalculated);
     }, 1000);
   };
 
-  const shortBreakTime = () => {
-    timerFormat(shortBreakSeconds, shortBreak, "ShortBreak");
+  const focusTime: TimerCondition = ({
+    minutesCalculated,
+    secondsCalculated,
+    secondsLeft,
+  }) => {
+    if (
+      isTimeFinished(minutesCalculated, secondsCalculated) &&
+      cycleCountRef.current < cycle
+    ) {
+      setEvent("focusEnd");
+      setFocusSeconds(focus);
+      cycleCountRef.current = cycleCountRef.current + 1;
+      setCompletedCycle((prevCiclo) => prevCiclo + 1);
+      setTotalTime(0);
+      stopTime(intervalID.current);
+      setTimerMode("timerModeShort");
+      return;
+    }
 
-    var hoursCalculadas = Math.floor(shortBreakSeconds / 3600);
-    var minutesCalculados = Math.floor((shortBreakSeconds % 3600) / 60);
-    var secondsCalculados = shortBreakSeconds % 60;
-    var secondsLeft = shortBreakSeconds;
+    if (
+      isTimeFinished(minutesCalculated, secondsCalculated) &&
+      cycleCountRef.current === cycle
+    ) {
+      setEvent("focusEnd");
+      cycleCountRef.current = 0;
+      setFocusSeconds(focus);
+      setTotalTime(0);
+      stopTime(intervalID.current);
+      setTimerMode("timerModeLong");
+      return;
+    }
 
-    intervalID.current = setInterval(() => {
-      if (
-        !(hoursCalculadas > 0) &&
-        !(minutesCalculados > 0) &&
-        !(secondsCalculados > 0)
-      ) {
-        stopTime(intervalID.current);
-        return;
-      }
-
-      if (secondsCalculados <= 0) {
-        secondsCalculados = 60;
-        minutesCalculados--;
-      }
-
-      if (minutesCalculados <= 0 && hoursCalculadas > 0) {
-        minutesCalculados = 59;
-        secondsCalculados = 60;
-        hoursCalculadas--;
-      }
-
-      setTotalTime((prevtotalTime) => prevtotalTime + 1);
-      secondsCalculados--;
-      secondsLeft--;
-
-      if (secondsCalculados <= 0 && minutesCalculados <= 0) {
-        setIsFinished(true);
-        secondsLeft = shortBreak;
-        stopTime(intervalID.current);
-        setTimerMode("timerModeFocus");
-      }
-
-      setShortBreakSeconds(secondsLeft);
-      setHours(hoursCalculadas);
-      setMinutes(minutesCalculados);
-      setseconds(secondsCalculados);
-    }, 1000);
+    setFocusSeconds(secondsLeft);
   };
 
-  const longBreakTime = () => {
-    timerFormat(longBreakSeconds, longBreak, "LongBreak");
+  const shortBreakTime: TimerCondition = ({
+    minutesCalculated,
+    secondsCalculated,
+    secondsLeft,
+  }) => {
+    if (isTimeFinished(minutesCalculated, secondsCalculated)) {
+      setEvent("shortbreakEnd");
+      secondsLeft = shortBreak;
+      stopTime(intervalID.current);
+      setTimerMode("timerModeFocus");
+    }
 
-    var hoursCalculadas = Math.floor(longBreakSeconds / 3600);
-    var minutesCalculados = Math.floor((longBreakSeconds % 3600) / 60);
-    var secondsCalculados = longBreakSeconds % 60;
-    var secondsLeft = longBreakSeconds;
+    setShortBreakSeconds(secondsLeft);
+  };
 
-    intervalID.current = setInterval(() => {
-      if (
-        !(hoursCalculadas > 0) &&
-        !(minutesCalculados > 0) &&
-        !(secondsCalculados > 0)
-      ) {
-        stopTime(intervalID.current);
-        return;
-      }
+  const longBreakTime: TimerCondition = ({
+    minutesCalculated,
+    secondsCalculated,
+    secondsLeft,
+  }) => {
+    if (isTimeFinished(minutesCalculated, secondsCalculated)) {
+      setEvent("longbreakEnd");
+      setCompletedCycle(0);
+      secondsLeft = longBreak;
+      stopTime(intervalID.current);
+      setTimerMode("timerModeFocus");
+    }
 
-      if (secondsCalculados <= 0) {
-        secondsCalculados = 60;
-        minutesCalculados--;
-      }
+    setLongBreakSeconds(secondsLeft);
+  };
 
-      if (minutesCalculados <= 0 && hoursCalculadas > 0) {
-        minutesCalculados = 59;
-        secondsCalculados = 60;
-        hoursCalculadas--;
-      }
+  const timerMap: TimerMap = {
+    timerModeFocus: {
+      timerSeconds: focusSeconds,
+      timeBreak: focus,
+      timerStatus: "Focus",
+      handler: focusTime,
+    },
 
-      setTotalTime((prevtotalTime) => prevtotalTime + 1);
-      secondsCalculados--;
-      secondsLeft--;
+    timerModeShort: {
+      timerSeconds: shortBreakSeconds,
+      timeBreak: shortBreak,
+      timerStatus: "ShortBreak",
+      handler: shortBreakTime,
+    },
 
-      if (secondsCalculados <= 0 && minutesCalculados <= 0) {
-        setIsFinished(true);
-        setCompletedCycle(0);
-        secondsLeft = longBreak;
-        stopTime(intervalID.current);
-        setTimerMode("timerModeFocus");
-      }
+    timerModeLong: {
+      timerSeconds: longBreakSeconds,
+      timeBreak: longBreak,
+      timerStatus: "LongBreak",
+      handler: longBreakTime,
+    },
+  };
 
-      setLongBreakSeconds(secondsLeft);
-      setHours(hoursCalculadas);
-      setMinutes(minutesCalculados);
-      setseconds(secondsCalculados);
-    }, 1000);
+  const isTimeFinished = (
+    minutesCalculated: number,
+    secondsCalculated: number,
+  ) => {
+    if (minutesCalculated <= 0 && secondsCalculated <= 0) return true;
+    return false;
   };
 
   const startTime = () => {
     if (intervalID.current) return;
     switch (timerStatus) {
       case "Focus":
-        AudioStart.play();
-        focusTime();
+        timer({
+          timerSeconds: focusSeconds,
+          timeBreak: focus,
+          timerStatus: "Focus",
+          handler: focusTime,
+        });
         break;
 
       case "ShortBreak":
-        shortBreakTime();
+        timer({
+          timerSeconds: shortBreakSeconds,
+          timeBreak: shortBreak,
+          timerStatus: "ShortBreak",
+          handler: shortBreakTime,
+        });
         break;
 
       case "LongBreak":
-        longBreakTime();
+        timer({
+          timerSeconds: longBreakSeconds,
+          timeBreak: longBreak,
+          timerStatus: "LongBreak",
+          handler: longBreakTime,
+        });
         break;
 
       default:
@@ -298,6 +276,6 @@ export function useTimer(props: useTimerProps) {
     hours,
     minutes,
     seconds,
-    isFinished,
+    event,
   };
 }

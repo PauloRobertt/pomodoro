@@ -21,6 +21,12 @@ import { FaRocket } from "react-icons/fa";
 import { FaRegHourglass } from "react-icons/fa6";
 import { RiSofaLine } from "react-icons/ri";
 
+import noticationStart from "~/sounds/noticationStart.mp3";
+import noticationStop from "~/sounds/noticationStop.mp3";
+
+const AudioStart = new Audio(noticationStart);
+const AudioFinish = new Audio(noticationStop);
+
 export default function Pomodoro({
   focus,
   shortBreak,
@@ -54,7 +60,7 @@ export default function Pomodoro({
     hours,
     minutes,
     seconds,
-    isFinished,
+    event,
   } = useTimer({
     focus: timeFocus,
     shortBreak: timeShort,
@@ -79,10 +85,16 @@ export default function Pomodoro({
   }, [timeFocus]);
 
   useEffect(() => {
-    if (isFinished) {
-      sendNotification("Tempo finalizado!");
+    if (event == "focusEnd") {
+      AudioFinish.play();
+      sendNotification("Focus time is over!");
     }
-  }, [isFinished]);
+
+    if (event == "shortbreakEnd" || event == "longbreakEnd") {
+      AudioStart.play();
+      sendNotification("Rest time is over!");
+    }
+  }, [event]);
 
   function saveConfig(
     e: React.FormEvent,
@@ -147,6 +159,7 @@ export default function Pomodoro({
             <>
               <Button
                 action={() => {
+                  AudioFinish.play();
                   setIsUseTimer(false);
                   stopTime();
                 }}
@@ -168,6 +181,7 @@ export default function Pomodoro({
             <>
               <Button
                 action={() => {
+                  AudioStart.play();
                   askNotification();
                   setIsUseTimer(true);
                   startTime();
