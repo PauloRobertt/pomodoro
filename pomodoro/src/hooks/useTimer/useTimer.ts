@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 
-import type { useTimerProps } from "~/types/useTimer";
-import type { TimerStatus } from "~/types/timerStatus";
-import type { typeTimerMode } from "~/types/timerMode";
-import type { TimerConfig } from "~/types/timerConfig";
-import type { TimerMap } from "~/types/timerMap";
-import type { TimerCondition } from "~/types/timerCondition";
-import type { EventTimer } from "~/types/eventTimer";
+import type { useTimerProps } from "~/types/useTimer-props";
+import type { TimerStatus } from "~/types/timer-status";
+import type { TimerMode } from "~/types/timer-mode";
+import type { TimerConfig } from "~/types/timer-config";
+import type { TimerMap } from "~/types/timer-map";
+import type { TimerCondition } from "~/types/timer-condition";
+import type { EventTimer } from "~/types/event-timer";
 
 export function useTimer(props: useTimerProps) {
   const { focus, shortBreak, longBreak, cycle } = props;
@@ -23,7 +23,7 @@ export function useTimer(props: useTimerProps) {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setseconds] = useState(0);
   const [timerStatus, setTimerStatus] = useState<TimerStatus | null>(null);
-  const [timerMode, setTimerMode] = useState<typeTimerMode | null>(null);
+  const [timerMode, setTimerMode] = useState<TimerMode | null>(null);
 
   const [event, setEvent] = useState<EventTimer>();
 

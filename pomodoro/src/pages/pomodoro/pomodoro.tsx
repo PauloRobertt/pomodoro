@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useTimer } from "~/hooks/useTimer/useTimer.ts";
 import { useNotification } from "~/hooks/useNotification/useNotification.ts";
-import type { useTimerProps } from "~/types/useTimer.ts";
+import type { useTimerProps } from "~/types/useTimer-props";
 
 import Button from "~/components/button/button.tsx";
 import TimerDisplay from "~/components/timeDisplay/timerDisplay.tsx";
