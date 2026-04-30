@@ -6,7 +6,7 @@ import styles from "./menu.module.css";
 import stylesButton from "~/components/button/button.module.css";
 
 //types
-import type { MenuProps } from "~/types/menu";
+import type { MenuProps } from "~/types/menu-props";
 
 //icons
 import { BsFillGearFill } from "react-icons/bs";
@@ -74,28 +74,28 @@ export default function Menu({
               text="Focus Duration"
               type="number"
               value={valueFocus}
-              functionSaveConfig={saveMenuConfig}
+              saveOptionMenu={saveMenuConfig}
             />
             <OptionMenu
               id="short"
               text="Short Duration"
               type="number"
               value={valueShort}
-              functionSaveConfig={saveMenuConfig}
+              saveOptionMenu={saveMenuConfig}
             />
             <OptionMenu
               id="long"
               text="Long Duration"
               type="number"
               value={valueLong}
-              functionSaveConfig={saveMenuConfig}
+              saveOptionMenu={saveMenuConfig}
             />
             <OptionMenu
               id="cycle"
               text="Cycle Duration"
               type="number"
               value={valueCycle}
-              functionSaveConfig={saveMenuConfig}
+              saveOptionMenu={saveMenuConfig}
             />
           </div>
           <div className={styles.buttonsConfig}>
