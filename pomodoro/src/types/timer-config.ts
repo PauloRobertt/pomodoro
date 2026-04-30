@@ -1,5 +1,5 @@
-import type { TimerStatus } from "./timerStatus";
-import type { TimerCondition } from "./timerCondition";
+import type { TimerStatus } from "./timer-status";
+import type { TimerCondition } from "./timer-condition";
 
 export type TimerConfig = {
   timerSeconds: number;
