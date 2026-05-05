@@ -25,7 +25,7 @@ export function useTimer(props: useTimerProps) {
   const [timerStatus, setTimerStatus] = useState<TimerStatus | null>(null);
   const [timerMode, setTimerMode] = useState<TimerMode | null>(null);
 
-  const [event, setEvent] = useState<EventTimer>();
+  const [event, setEvent] = useState<EventTimer>("stop");
 
   const intervalID = useRef<number | undefined>(undefined);
   const cycleCountRef = useRef<number>(0);
@@ -254,6 +254,7 @@ export function useTimer(props: useTimerProps) {
 
   const resetTime = () => {
     cycleCountRef.current = 0;
+    setEvent("stop");
     setTimerMode(null);
     setCompletedCycle(0);
     setTotalTime(0);

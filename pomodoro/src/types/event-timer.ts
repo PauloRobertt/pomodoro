@@ -1,1 +1,1 @@
-export type EventTimer = "focusEnd" | "shortbreakEnd" | "longbreakEnd";
+export type EventTimer = "stop" | "focusEnd" | "shortbreakEnd" | "longbreakEnd";
