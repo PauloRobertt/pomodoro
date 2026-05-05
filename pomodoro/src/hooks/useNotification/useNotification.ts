@@ -1,4 +1,7 @@
+import { useNotificationContext } from "./useNotificationContext";
+
 export function useNotification() {
+  const { isSound } = useNotificationContext();
   const askNotification = () => {
     if (!("Notification" in window)) {
       alert("This browser does not support desktop notification");
@@ -17,6 +20,7 @@ export function useNotification() {
     if (Notification.permission === "granted") {
       new Notification("Notificação Pomodoro", {
         body: textBody,
+        silent: isSound ? false : true,
       });
     }
   };

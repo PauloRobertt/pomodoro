@@ -4,14 +4,12 @@ import { useTimer } from "~/hooks/useTimer/useTimer.ts";
 import { useNotification } from "~/hooks/useNotification/useNotification.ts";
 import type { useTimerProps } from "~/types/useTimer-props";
 
+import Header from "~/components/header/header.tsx";
 import Button from "~/components/button/button.tsx";
 import TimerDisplay from "~/components/timeDisplay/timerDisplay.tsx";
-import Menu from "~/layout/menu/menu.tsx";
 
 import styles from "./pomodoro.module.css";
 import stylesButton from "~/components/button/button.module.css";
-
-import { OrganizarImgs } from "~/assets/OrganizarImgs.ts";
 
 //icons
 import { FaPlay } from "react-icons/fa";
@@ -23,6 +21,7 @@ import { RiSofaLine } from "react-icons/ri";
 
 import noticationStart from "~/sounds/noticationStart.mp3";
 import noticationStop from "~/sounds/noticationStop.mp3";
+import { useNotificationContext } from "~/hooks/useNotification/useNotificationContext";
 
 const AudioStart = new Audio(noticationStart);
 const AudioFinish = new Audio(noticationStop);
@@ -47,6 +46,7 @@ export default function Pomodoro({
   );
   const [isUseTimer, setIsUseTimer] = useState(false);
   const { sendNotification, askNotification } = useNotification();
+  const { isSound } = useNotificationContext();
 
   const {
     startTime,
@@ -86,12 +86,12 @@ export default function Pomodoro({
 
   useEffect(() => {
     if (event == "focusEnd") {
-      AudioFinish.play();
+      if (isSound) AudioFinish.play();
       sendNotification("Focus time is over!");
     }
 
     if (event == "shortbreakEnd" || event == "longbreakEnd") {
-      AudioStart.play();
+      if (isSound) AudioStart.play();
       sendNotification("Rest time is over!");
     }
   }, [event]);
@@ -126,22 +126,13 @@ export default function Pomodoro({
 
   return (
     <div className={styles.containerPomodoro}>
-      <header className={styles.header}>
-        <figure className={styles.figureLogo}>
-          <img
-            src={OrganizarImgs.pomodoroDefault}
-            alt="logo projeto pomodoro"
-          />
-        </figure>
-        <p>Pomodoro Timer</p>
-        <Menu
-          defaultValueFocus={timeFocus}
-          defaultValueShortBreak={timeShort}
-          defaultValueLongBreak={timeLong}
-          defaultValueCycle={timeCycle}
-          functionSaveConfig={saveConfig}
-        />
-      </header>
+      <Header
+        ValueFocus={timeFocus}
+        ValueShortBreak={timeShort}
+        ValueLongBreak={timeLong}
+        ValueCycle={timeCycle}
+        functionSaveConfig={saveConfig}
+      />
 
       <main>
         <TimerDisplay
@@ -159,7 +150,7 @@ export default function Pomodoro({
             <>
               <Button
                 action={() => {
-                  AudioFinish.play();
+                  if (isSound) AudioFinish.play();
                   setIsUseTimer(false);
                   stopTime();
                 }}
@@ -181,7 +172,7 @@ export default function Pomodoro({
             <>
               <Button
                 action={() => {
-                  AudioStart.play();
+                  if (isSound) AudioStart.play();
                   askNotification();
                   setIsUseTimer(true);
                   startTime();
